@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface GameRepository extends JpaRepository<Game, Long> {
+public interface GameRepository extends JpaRepository<Game, Long>{
 
     @Query( "SELECT g FROM Game g LEFT JOIN g.genres genre " +
             "WHERE (:keyword IS NULL OR g.name LIKE %:keyword%) " +

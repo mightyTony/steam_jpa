@@ -1,7 +1,6 @@
 package com.example.steam.domain.game;
 
-import com.example.steam.domain.game.dto.GameCreateRequest;
-import com.example.steam.domain.game.dto.GameDetailResponse;
+import com.example.steam.domain.game.dto.*;
 import com.example.steam.domain.game.genre.GameGenre;
 import com.example.steam.util.Response;
 import com.example.steam.util.annotation.AdminAuthorize;
@@ -45,17 +44,6 @@ public class GameController {
         return  Response.success(response);
     }
 
-    // 게임 목록 조회 (검색 + 페이징)
-    @GetMapping
-    public Response<Page<Game>> getAllGames(@RequestParam(required = false) String keyword,
-                                            @RequestParam(required = false) String genre,
-                                            Pageable pageable) {
-
-        Page<Game> allGames = gameService.getAllGames(keyword, genre, pageable);
-
-        return Response.success(allGames);
-    }
-
     // 특정 게임 상세 조회
     @GetMapping("/{id}")
     public Response<GameDetailResponse> getGameInfoDetail(@PathVariable("id") Long id) {
@@ -71,12 +59,42 @@ public class GameController {
         return Response.success("게임이 삭제 되었습니다.");
     }
 
-//    // 할인 적용
-//    @AdminAuthorize
-//    @PatchMapping("/{id}/discount")
-//    public Response<GameDetailResponse> applyDiscount(@PatchMapping Long id, @RequestBody GameDiscountRequest request) {
-//
-//    }
+    // 할인 적용
+    @AdminAuthorize
+    @PatchMapping("/{id}/discount")
+    public Response<GameDetailResponse> applyDiscount(@PathVariable("id") Long id, @RequestBody GameDiscountRequest request) {
+        GameDetailResponse response = gameService.applyDiscount(id, request);
+        return Response.success(response);
+    }
+
+    // 게임 오픈
+    @AdminAuthorize
+    @PatchMapping("/{id}/open")
+    public Response<Void> publishGame(@PathVariable("id") Long id) {
+        gameService.publishGame(id);
+
+        return Response.success();
+    }
+
+    // 게임 정보 수정
+    @AdminAuthorize
+    @PatchMapping("/{id}/info")
+    public Response<GameUpdateResponse> updateGameInfo(@PathVariable("id") Long id, @RequestBody GameUpdateRequest request) {
+        GameUpdateResponse response = gameService.updateGame(id, request);
+
+        return Response.success(response);
+    }
+
+    // 게임 목록 조회 (검색 + 페이징)
+    @GetMapping
+    public Response<Page<Game>> getAllGames(@RequestParam(required = false) String keyword,
+                                            @RequestParam(required = false) String genre,
+                                            Pageable pageable) {
+
+        Page<Game> allGames = gameService.getAllGames(keyword, genre, pageable);
+
+        return Response.success(allGames);
+    }
 
     // 인기 게임 조회
 //    @GetMapping("/pop")

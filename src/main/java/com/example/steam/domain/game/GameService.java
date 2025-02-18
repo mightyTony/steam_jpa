@@ -1,7 +1,6 @@
 package com.example.steam.domain.game;
 
-import com.example.steam.domain.game.dto.GameCreateRequest;
-import com.example.steam.domain.game.dto.GameDetailResponse;
+import com.example.steam.domain.game.dto.*;
 import com.example.steam.domain.game.genre.GameGenre;
 import com.example.steam.domain.game.genre.GameGenreRepository;
 import com.example.steam.exception.ErrorCode;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,11 +91,43 @@ public class GameService {
     }
 
     // 할인 적용
-//    public Game applyDiscount(Long id, GameDiscountDto discountDto) {
-//        Game game = getGameById(id);
-//        game.applyDiscount(discountDto.getDiscount());
-//        return gameRepository.save(game);
-//    }
+    public GameDetailResponse applyDiscount(Long id, GameDiscountRequest discountDto) {
+        // 1. 조회
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+
+        // 2. 최종가 설정
+        game.discount(discountDto.getDiscount());
+
+        // 3. 정보 업데이트
+        Game saved = gameRepository.save(game);
+
+        return new GameDetailResponse(saved);
+    }
+
+    @Transactional
+    public void publishGame(Long id) {
+        Game game = gameRepository.findById(id).orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+        game.publish();
+    }
+
+    // 게임 정보 수정
+    @Transactional
+    public GameUpdateResponse updateGame(Long gameId, GameUpdateRequest request) {
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+
+        game.update(request.getName(),
+                request.getDeveloper(),
+                request.getPublisher(),
+                request.getContent(),
+                request.getPrice(),
+                request.getPictureUrl()
+        );
+
+        gameRepository.save(game);
+
+        return new GameUpdateResponse(game);
+    }
 
     // 인기 게임 조회(판매량)
 

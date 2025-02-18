@@ -40,4 +40,4 @@ out/
 *.yml
 
 ## querydsl ###
-/generated/**
+!**/src/main/generated/**

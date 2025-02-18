@@ -41,7 +41,7 @@ public class Game extends BaseEntity {
     private String pictureUrl;
     private int sales = 0;
     private int discount;
-    private boolean onSale = true; // 판매 중
+    private boolean onSale; // 판매 중
 
     @Column(nullable = false)
     private String releaseDate;
@@ -62,5 +62,24 @@ public class Game extends BaseEntity {
         this.discount = 0;
         this.onSale = onSale;
         this.releaseDate = releaseDate;
+    }
+
+    public void discount(int discount) {
+        this.discount = discount;
+        this.totalPrice = (int)Math.ceil(price * (1 - discount / 100.0));
+    }
+    public void publish() {
+        this.onSale = true;
+    }
+
+    public void update(String name, String developer, String publisher,
+                       String content, int price, String pictureUrl) {
+        this.name = name;
+        this.developer = developer;
+        this.publisher = publisher;
+        this.content = content;
+        this.price = price;
+        this.totalPrice = price; // 가격 변경 시 같이 변경
+        this.pictureUrl = pictureUrl;
     }
 }
