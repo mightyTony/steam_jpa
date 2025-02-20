@@ -3,6 +3,7 @@ package com.example.steam.domain.cart;
 import com.example.steam.domain.game.Game;
 import com.example.steam.domain.user.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,6 +26,9 @@ public class Cart {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    @Column(nullable = false)
-    private int quantity = 1;
+    @Builder
+    public Cart(User user, Game game) {
+        this.user = user;
+        this.game = game;
+    }
 }

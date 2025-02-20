@@ -1,17 +1,12 @@
 package com.example.steam.domain.game;
 
-import com.example.steam.domain.game.genre.GameGenre;
 import com.example.steam.domain.game.genre.GameGenreRepository;
+import com.example.steam.domain.game.query.GameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")

@@ -14,6 +14,8 @@ public class GameResponse {
     private String developer;
     private String publisher;
     private int price;
+    private int totalPrice;
+    private String pictureUrl;
     private boolean onSale;
     private String releaseDate;
     private List<String> genres;
@@ -24,6 +26,8 @@ public class GameResponse {
         this.developer = game.getDeveloper();
         this.publisher = game.getPublisher();
         this.price = game.getPrice();
+        this.totalPrice = game.getTotalPrice();
+        this.pictureUrl = game.getPictureUrl();
         this.onSale = game.isOnSale();
         this.releaseDate = game.getReleaseDate();
         this.genres = game.getGenres().stream()

@@ -13,7 +13,9 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호를 틀리셨습니다" ),
 
     ALREADY_EXISTED_GAME(HttpStatus.CONFLICT, "이미 존재하는 게임 입니다."),
-    NOT_FOUND_GAME(HttpStatus.BAD_REQUEST, "존재 하지 않는 게임 입니다." );
+    NOT_FOUND_GAME(HttpStatus.BAD_REQUEST, "존재 하지 않는 게임 입니다." ),
+
+    NOT_FOUND_GAME_IN_CART(HttpStatus.CONFLICT, "장바구니에 이미 있습니다." );
 
     private final HttpStatus status;
     private final String message;

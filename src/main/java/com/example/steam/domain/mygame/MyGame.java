@@ -1,5 +1,6 @@
-package com.example.steam.domain.game;
+package com.example.steam.domain.mygame;
 
+import com.example.steam.domain.game.Game;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.BaseEntity;
 import jakarta.persistence.*;

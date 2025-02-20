@@ -1,6 +1,7 @@
 package com.example.steam.config;
 
 import com.example.steam.config.jwt.JwtAuthenticationFilter;
+import com.example.steam.config.jwt.JwtExceptionHandler;
 import com.example.steam.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +21,10 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService userDetailsService;
+    private final JwtExceptionHandler jwtExceptionHandler;
     private final String[] AUTH_WHITELIST = {
-            "/api/**", "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**"
+            "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
+            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**"
     };
 
     @Bean
@@ -42,7 +45,11 @@ public class SecurityConfig {
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtExceptionHandler)
+                        .accessDeniedHandler(jwtExceptionHandler)
+                );
 
         return http.build();
     }

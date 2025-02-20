@@ -3,12 +3,15 @@ package com.example.steam.domain.game;
 import com.example.steam.domain.game.dto.*;
 import com.example.steam.domain.game.genre.GameGenre;
 import com.example.steam.domain.game.genre.GameGenreRepository;
+import com.example.steam.domain.game.query.GameRepository;
+import com.example.steam.domain.user.User;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,9 +72,9 @@ public class GameService {
     }
 
     // 게임 목록 조회 ( 키워드 + 페이징 )
-    public Page<Game> getAllGames(String keyword, String genre, Pageable pageable) {
-        return gameRepository.searchGames(keyword, genre, pageable);
-    }
+//    public Page<Game> getAllGames(String keyword, String genre, Pageable pageable) {
+//        return gameRepository.searchGames(keyword, genre, pageable);
+//    }
 
     // 특정 게임 상세 조회
     public GameDetailResponse getGameById(Long id) {
@@ -83,15 +86,16 @@ public class GameService {
 
     // 게임 삭제
     @Transactional
-    public void deleteGame(Long id) {
-        if(!gameRepository.existsById(id)) {
-            throw new SteamException(ErrorCode.NOT_FOUND_GAME, "삭제할 게임이 존재하지 않습니다.");
-        }
+    public void deleteGame(Long id, @AuthenticationPrincipal User user) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+
         gameRepository.deleteById(id);
+        log.info("[게임][어드민] 게임이 삭제 되었습니다. 게임 명 - {}, 삭제 한 유저 : {}", game.getName(), user.getUsername());
     }
 
     // 할인 적용
-    public GameDetailResponse applyDiscount(Long id, GameDiscountRequest discountDto) {
+    public GameDetailResponse applyDiscount(Long id, GameDiscountRequest discountDto, @AuthenticationPrincipal User user) {
         // 1. 조회
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
@@ -102,13 +106,20 @@ public class GameService {
         // 3. 정보 업데이트
         Game saved = gameRepository.save(game);
 
+        log.info("[게임][어드민] 할인 적용 되었습니다. {} / by {}", game.getName(), user.getUsername());
+
         return new GameDetailResponse(saved);
     }
 
     @Transactional
-    public void publishGame(Long id) {
-        Game game = gameRepository.findById(id).orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+    public void publishGame(Long id, @AuthenticationPrincipal User user) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
         game.publish();
+
+        gameRepository.save(game);
+
+        log.info("[게임][어드민] 게임이 릴리즈 되었습니다. {} / by {}", game.getName(), user.getUsername());
     }
 
     // 게임 정보 수정
@@ -129,6 +140,10 @@ public class GameService {
         return new GameUpdateResponse(game);
     }
 
-    // 인기 게임 조회(판매량)
+    @Transactional(readOnly = true)
+    public Page<GameDetailResponse> getGamesByCategory(String category, String name, Integer minPrice, Integer maxPrice, Pageable pageable) {
+        return gameRepository.findGamesByCategory(category,name,minPrice,maxPrice, pageable);
+    }
+
 
 }
