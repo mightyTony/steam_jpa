@@ -20,7 +20,7 @@ public class GameGenre {
     @JoinColumn(name = "game_id")
     private Game game;
 
-    @Column(name = "genre_name", unique = true)
+    @Column(name = "genre_name")
     private String genreName;
 
 }
