@@ -6,11 +6,10 @@ import lombok.Getter;
 @Getter
 public class SteamException extends RuntimeException{
     private final ErrorCode errorCode;
-    private String message;
 
     public SteamException(ErrorCode errorCode, String message) {
+        super(message);
         this.errorCode = errorCode;
-        this.message = message;
     }
 
     public SteamException(ErrorCode errorCode) {
@@ -18,8 +17,4 @@ public class SteamException extends RuntimeException{
         this.errorCode = errorCode;
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
 }

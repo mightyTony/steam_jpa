@@ -16,6 +16,7 @@ public class CorsConfig {
     @Value("${origin.url}")
     private String ALLOWED_ORIGINS;
 
+    //FIXME : 나중에 헤더 제한
     private static final List<String> ALLOWED_HEADERS = List.of("*");
 
     private static final List<String> ALLOWED_METHODS = List.of("GET","POST","PUT", "DELETE", "OPTIONS");
