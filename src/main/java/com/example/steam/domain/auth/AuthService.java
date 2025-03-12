@@ -38,6 +38,8 @@ public class AuthService {
 
         authRepository.save(user);
 
+        // TODO: 기본 프로필 생성
+
         return UserJoinResponse.fromUser(user);
     }
 

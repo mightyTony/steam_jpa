@@ -70,4 +70,8 @@ public class Order extends BaseEntity {
     public void addTid(String tid) {
         this.tid = tid;
     }
+
+    public void cancel() {
+        this.status = OrderStatus.CANCELED;
+    }
 }

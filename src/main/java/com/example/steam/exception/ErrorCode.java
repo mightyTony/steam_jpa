@@ -19,7 +19,9 @@ public enum ErrorCode {
     NOT_FOUND_GAME_IN_CART(HttpStatus.CONFLICT, "장바구니에 해당 게임이 존재하지 않습니다." ),
 
     NOT_FOUND_ORDER_TID(HttpStatus.CONFLICT, "카카오 구매건 조회가 되지않습니다."),
-    ORDER_NOT_FOUND(HttpStatus.CONFLICT, "구매 조회 안됨" );
+    ORDER_NOT_FOUND(HttpStatus.CONFLICT, "구매 조회 안됨" ),
+    ORDER_FAILED(HttpStatus.BAD_REQUEST, "진행중인 거래가 있습니다. 잠시 후 다시 시도해 주세요." ),
+    ALREADY_BUY_GAME(HttpStatus.BAD_REQUEST, "이미 구매한 게임이 포함되어 있습니다");
     private final HttpStatus status;
     private final String message;
 }

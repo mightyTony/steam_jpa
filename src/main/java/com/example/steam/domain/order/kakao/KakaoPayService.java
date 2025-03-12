@@ -13,6 +13,7 @@ import com.example.steam.domain.order.OrderService;
 import com.example.steam.domain.order.dto.KakaoApproveRequest;
 import com.example.steam.domain.order.dto.KakaoPayApprovalResponse;
 import com.example.steam.domain.order.dto.KakaoPayReadyResponse;
+import com.example.steam.domain.order.dto.OrderHistoryResponse;
 import com.example.steam.domain.order.query.OrderRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.exception.ErrorCode;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +51,7 @@ public class KakaoPayService implements OrderService {
     @Value("${kakaopay.url.fail}")
     private String failUrl;
     @Value("${front.url}")
-    private String frontendUrl;
+    private String serverUrl;
 
     private final RestTemplate restTemplate;
     private final CartRepository cartRepository;
@@ -66,6 +68,21 @@ public class KakaoPayService implements OrderService {
         return headers;
     }
 
+    private void checkAlreadyBuyGame(User user, List<Game> games) {
+        List<Game> alreadyBuyGames = new ArrayList<>();
+
+        for (Game game : games) {
+            if(myGameRepository.existsByUserAndGame(user, game)) {
+                alreadyBuyGames.add(game);
+            }
+        }
+
+        if(!alreadyBuyGames.isEmpty()) {
+            throw new SteamException(ErrorCode.ALREADY_BUY_GAME);
+        }
+    }
+
+
     // 장바구니 전체 결제 준비
     @Override
     @Transactional
@@ -77,6 +94,9 @@ public class KakaoPayService implements OrderService {
         }
 
         List<Game> games = cartItems.stream().map(Cart::getGame).toList();
+
+        // 이미 구매 한 게임 인지 체크
+        checkAlreadyBuyGame(user, games);
         int totalPrice = games.stream().mapToInt(Game::getTotalPrice).sum();
 
         return createKakaoPayRequest(user, games, totalPrice);
@@ -91,6 +111,9 @@ public class KakaoPayService implements OrderService {
             throw new SteamException(ErrorCode.NOT_FOUND_GAME);
         }
 
+        // 이미 구매 한 게임 인지 체크
+        checkAlreadyBuyGame(user, games);
+
         int totalPrice = games.stream().mapToInt(Game::getTotalPrice).sum();
         return createKakaoPayRequest(user, games, totalPrice);
     }
@@ -101,6 +124,9 @@ public class KakaoPayService implements OrderService {
     public KakaoPayReadyResponse readyPaymentNow(User user, Long gameId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+
+        // 이미 구매 한 게임 인지 체크
+        checkAlreadyBuyGame(user, List.of(game));
 
         return createKakaoPayRequest(user, List.of(game), game.getTotalPrice());
     }
@@ -118,19 +144,27 @@ public class KakaoPayService implements OrderService {
                 .map(game -> new OrderItem(order, game, game.getTotalPrice()))
                 .toList();
         orderItemRepository.saveAll(orderItems);
-//        order.addOrderItems(orderItems);
+
+        // 주문 이름
+        String itemName;
+        if(games.size() > 1){
+            itemName = games.get(0).getName() + " 외 " + (games.size()-1) + "개";
+        } else {
+            itemName = games.get(0).getName();
+        }
+
         // 카카오페이 API 요청 데이터 생성
         KakaoPayReadyRequest requestBody = KakaoPayReadyRequest.builder()
                 .cid(cid)
                 .partnerOrderId(order.getId().toString())
                 .partnerUserId(user.getId().toString())
-                .itemName(games.get(0).getName())  // 첫 번째 게임
+                .itemName(itemName)
                 .quantity(games.size())
                 .totalAmount(totalAmount)
                 .taxFreeAmount(0)
-                .approvalUrl(frontendUrl + "/api/v1/payment/success?oid=" + order.getId())
-                .cancelUrl(frontendUrl + "/api/v1/payment/cancel")
-                .failUrl(frontendUrl + "/api/v1/payment/fail")
+                .approvalUrl(serverUrl + "/api/v1/payment/success?oid=" + order.getId())  // 성공시 리다이렉트
+                .cancelUrl(serverUrl + "/api/v1/payment/cancel?oid=" + order.getId())  // 취소시
+                .failUrl(serverUrl + "/api/v1/payment/fail?oid=" + order.getId())  // 실패시
                 .build();
 
         // 카카오페이 결제 요청
@@ -171,6 +205,16 @@ public class KakaoPayService implements OrderService {
         ResponseEntity<KakaoPayApprovalResponse> responseEntity = restTemplate.postForEntity(
                 approvalUrl, requestEntity, KakaoPayApprovalResponse.class);
 
+        // 결제 실패시
+        if (responseEntity.getStatusCode().is4xxClientError() || responseEntity.getStatusCode().is5xxServerError()) {
+            log.warn("[approvePayment] KakaoPayApproval failed");
+            log.warn("[approvePayment] KakaoPayApproval failed - status : {}", responseEntity.getStatusCode());
+            log.warn("[approvePayment] KakaoPayApproval failed - getBody : {}", responseEntity.getBody());
+            order.failed();
+            orderRepository.save(order);
+            throw new SteamException(ErrorCode.ORDER_FAILED);
+        }
+
         KakaoPayApprovalResponse response = responseEntity.getBody();
 
         // 결제 완료 처리
@@ -184,6 +228,44 @@ public class KakaoPayService implements OrderService {
         removeGamesFromCart(order);
 
         return response;
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new SteamException(ErrorCode.ORDER_NOT_FOUND));
+
+
+        order.cancel();
+        orderRepository.save(order);
+
+        log.info("[결제 취소] - orderId : {}", order.getId());
+    }
+
+    @Override
+    public void failOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new SteamException(ErrorCode.ORDER_NOT_FOUND));
+
+        order.failed();
+        log.warn("[결제 실패] - orderId : {}", order.getId());
+        orderRepository.save(order);
+    }
+
+    // 결제 내역 조회
+    @Override
+    @Transactional(readOnly = true)
+    // FIXME : N+1 예상됨
+    public List<OrderHistoryResponse> getOrderHistory(User user) {
+        List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user);
+
+        List<OrderHistoryResponse> historyList = new ArrayList<>();
+
+        for (Order order : orders) {
+            historyList.add(OrderHistoryResponse.fromEntity(order));
+        }
+
+        return historyList;
     }
 
     // 내 게임에 등록
