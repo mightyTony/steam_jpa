@@ -2,7 +2,6 @@ package com.example.steam.domain.order;
 
 import com.example.steam.domain.order.dto.KakaoPayApprovalResponse;
 import com.example.steam.domain.order.dto.KakaoPayReadyResponse;
-import com.example.steam.domain.order.dto.OrderReadyRequest;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;
 import com.example.steam.util.annotation.LoginUser;

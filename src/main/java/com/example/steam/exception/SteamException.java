@@ -1,6 +1,5 @@
 package com.example.steam.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
