@@ -19,6 +19,7 @@ public class Order extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
     private User user;
 
     @Column(nullable = true)
@@ -32,7 +33,16 @@ public class Order extends BaseEntity {
     private OrderStatus status = OrderStatus.READY;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<OrderItem> orderItems;
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Builder
     public Order(User user, int totalPrice) {
