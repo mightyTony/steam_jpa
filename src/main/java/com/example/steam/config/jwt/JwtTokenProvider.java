@@ -1,5 +1,7 @@
 package com.example.steam.config.jwt;
 
+import com.example.steam.exception.ErrorCode;
+import com.example.steam.exception.SteamException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.*;
 import io.jsonwebtoken.security.SecurityException;
@@ -45,14 +47,19 @@ public class JwtTokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT - {}", token, e);
+        }
+        catch (SecurityException | MalformedJwtException e) {
+            log.warn("Invalid JWT - {}", e.getMessage());
+            log.warn("EXCEPTED TOKEN : {}", token);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT - {}", token, e);
+            log.warn("Expired JWT - {}", e.getMessage());
+            log.warn("EXCEPTED TOKEN : {}", token);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT - {}", token, e);
+            log.warn("Unsupported JWT - {}", e.getMessage());
+            log.warn("EXCEPTED TOKEN : {}", token);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty - {}", token, e);
+            log.warn("JWT claims string is empty - {}", e.getMessage());
+            log.warn("EXCEPTED TOKEN : {}", token);
         }
         return false;
     }

@@ -231,6 +231,7 @@ public class KakaoPayService implements OrderService {
     }
 
     @Override
+    @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new SteamException(ErrorCode.ORDER_NOT_FOUND));
@@ -243,6 +244,7 @@ public class KakaoPayService implements OrderService {
     }
 
     @Override
+    @Transactional
     public void failOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new SteamException(ErrorCode.ORDER_NOT_FOUND));
@@ -255,9 +257,10 @@ public class KakaoPayService implements OrderService {
     // 결제 내역 조회
     @Override
     @Transactional(readOnly = true)
-    // FIXME : N+1 예상됨
     public List<OrderHistoryResponse> getOrderHistory(User user) {
-        List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user);
+//        List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user);
+        log.info("getOrderHistory() call");
+        List<Order> orders = orderRepository.findOrdersWithItemsByUser(user);
 
         List<OrderHistoryResponse> historyList = new ArrayList<>();
 

@@ -37,6 +37,7 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom{
 
         List<Game> games = queryFactory
                 .selectFrom(game)
+                .distinct()
                 .leftJoin(game.genres, gameGenre).fetchJoin()
                 .where(whereClause)
                 .orderBy(getOrderSpecifier(category))

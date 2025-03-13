@@ -39,11 +39,11 @@ public class GameController {
             @RequestPart("data") GameCreateRequest requestDto,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile, @AuthenticationPrincipal User user) {
         Game game = gameService.createGame(requestDto);
-        List<GameGenre> genres = gameService.addGenresToGame(game, requestDto.getGenres());
+        //gameService.addGenresToGame(game, requestDto.getGenres());
 
         GameDetailResponse response = new GameDetailResponse(game);
 
-        log.info("[게임][어드민] 게임이 등록 되었습니다 : {}, 삭제 한 유저 :{}", response.getName(), user.getUsername());
+        log.info("[게임][어드민] 게임이 등록 되었습니다 : {}, 등록 한 유저 :{}", response.getName(), user.getUsername());
         return  Response.success(response);
     }
 
@@ -97,7 +97,7 @@ public class GameController {
             @RequestParam(value = "minPrice", required = false) Integer minPrice,
             @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
             Pageable pageable) {
-
+        log.info("[게임 목록 조회]");
         Page<GameDetailResponse> result = gameService.getGamesByCategory(category, name, minPrice, maxPrice, pageable);
 
         return Response.success(result);

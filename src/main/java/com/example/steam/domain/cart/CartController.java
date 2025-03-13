@@ -29,7 +29,9 @@ public class CartController {
     // 장바구니 목록 조회
     @GetMapping
     public Response<List<CartViewResponse>> getCartItems(@AuthenticationPrincipal User user) {
+        log.info("[장바구니 목록 조회]");
         List<CartViewResponse> result = cartService.getCartItems(user);
+        log.info("[장바구니 목록 조회] result : {}", result);
         return Response.success(result);
     }
 

@@ -63,6 +63,7 @@ public class OrderController {
     @LoginUser
     @GetMapping("/history")
     public Response<List<OrderHistoryResponse>> getOrderHistory(@AuthenticationPrincipal User user) {
+        log.info("Controller - [history api]");
         List<OrderHistoryResponse> history = orderService.getOrderHistory(user);
         return Response.success(history);
     }

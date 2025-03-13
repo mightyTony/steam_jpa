@@ -27,30 +27,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String token = resolveToken(request);
+        String token = resolveToken(request);
 
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                String username = jwtTokenProvider.getUsernameFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            String username = jwtTokenProvider.getUsernameFromToken(token);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-
-        } catch (ExpiredJwtException e) {
-            log.warn("JWT 만료 : {}", e.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 토큰 입니다");
-            return;
-        } catch (MalformedJwtException | SecurityException | UnsupportedJwtException | IllegalArgumentException e) {
-            log.warn("유효하지 않은 JWT : {}", e.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰 입니다");
-            return;
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
-
         filterChain.doFilter(request, response);
     }
 

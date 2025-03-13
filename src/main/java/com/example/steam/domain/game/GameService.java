@@ -51,11 +51,14 @@ public class GameService {
                 .onSale(false)
                 .build();
 
+        // 4. 장르 저장
+        addGenresToGame(game, request.getGenres());
+
         return gameRepository.saveAndFlush(game);
     }
 
-    @Transactional
-    public List<GameGenre> addGenresToGame(Game game, List<String> genres) {
+//    @Transactional
+    private void addGenresToGame(Game game, List<String> genres) {
         log.info("[addGenresToGame]");
         List<GameGenre> genreList = new ArrayList<>();
         for(String genreName : genres) {
@@ -66,15 +69,9 @@ public class GameService {
             genreList.add(gameGenre);
         }
 
-        List<GameGenre> genres1 = genreRepository.saveAll(genreList);
+        genreRepository.saveAll(genreList);
         game.getGenres().addAll(genreList);
-        return genres1;
     }
-
-    // 게임 목록 조회 ( 키워드 + 페이징 )
-//    public Page<Game> getAllGames(String keyword, String genre, Pageable pageable) {
-//        return gameRepository.searchGames(keyword, genre, pageable);
-//    }
 
     // 특정 게임 상세 조회
     public GameDetailResponse getGameById(Long id) {

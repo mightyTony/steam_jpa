@@ -4,6 +4,7 @@ import com.example.steam.domain.cart.dto.CartViewResponse;
 import com.example.steam.domain.cart.query.CartRepository;
 import com.example.steam.domain.game.Game;
 import com.example.steam.domain.game.query.GameRepository;
+import com.example.steam.domain.mygame.MyGameRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;
 import com.example.steam.exception.ErrorCode;
@@ -25,6 +26,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
+    private final MyGameRepository myGameRepository;
     @Transactional
     public void addToCart(Long gameId, User user) {
         // 게임 조회
@@ -34,6 +36,11 @@ public class CartServiceImpl implements CartService {
         // 카트에 이미 있는지 중복 검사
         if(cartRepository.existsByUserAndGame(user, game)) {
             throw new SteamException(ErrorCode.ALREADY_IN_CART);
+        }
+
+        // 마이 게임에 이미 있는지 중복 검사
+        if(myGameRepository.existsByUserAndGame(user,game)) {
+            throw new SteamException(ErrorCode.ALREADY_BUY_GAME);
         }
 
         // 장바구니에 추가
