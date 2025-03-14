@@ -1,15 +1,10 @@
 package com.example.steam.domain.review.dto;
 
-import com.example.steam.domain.game.Game;
-import com.example.steam.domain.review.entity.GameReview;
 import com.example.steam.domain.review.entity.ReviewType;
-import com.example.steam.domain.user.User;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
