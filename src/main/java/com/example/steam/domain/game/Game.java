@@ -1,6 +1,7 @@
 package com.example.steam.domain.game;
 
 import com.example.steam.domain.game.genre.GameGenre;
+import com.example.steam.domain.review.entity.GameReview;
 import com.example.steam.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -8,14 +9,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"reviews", "genres"})
 @Table(name = "game")
 public class Game extends BaseEntity {
     @Id
@@ -39,18 +39,26 @@ public class Game extends BaseEntity {
     @Column(nullable = false, name = "total_price")
     private int totalPrice; // 가격 % 할인률
     private String pictureUrl;
-    private int sales = 0;
-    private int discount;
+    private int sales;
+    private int discount; // 할인률
     private boolean onSale; // 판매 중
-
     @Column(nullable = false)
     private String releaseDate;
+    @Column(nullable = false)
+    private int likeCount;
+    @Column(nullable = false)
+    private int dislikeCount;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<GameGenre> genres = new ArrayList<>();
 
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<GameReview> reviews;
+
     @Builder
-    public Game(String name, String developer, String publisher, String content, int price, int totalPrice, String pictureUrl, boolean onSale, String releaseDate) {
+    public Game(String name, String developer, String publisher, String content,
+                int price, int totalPrice, String pictureUrl, boolean onSale,
+                String releaseDate) {
         this.name = name;
         this.developer = developer;
         this.publisher = publisher;
@@ -62,6 +70,8 @@ public class Game extends BaseEntity {
         this.discount = 0;
         this.onSale = onSale;
         this.releaseDate = releaseDate;
+        this.likeCount = 0;
+        this.dislikeCount = 0;
     }
 
     public void discount(int discount) {
@@ -81,5 +91,15 @@ public class Game extends BaseEntity {
         this.price = price;
         this.totalPrice = price; // 가격 변경 시 같이 변경
         this.pictureUrl = pictureUrl;
+    }
+
+    // todo 게임에 좋아요 구현 시 게임 리뷰에 좋아요/싫어요 값 변경 저장
+    public void like() {
+        this.likeCount ++;
+    }
+
+    // todo 게임에 좋아요 구현 시 게임 리뷰에 좋아요/싫어요 값 변경 저장
+    public void dislike() {
+        this.dislikeCount ++;
     }
 }

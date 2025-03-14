@@ -1,22 +1,24 @@
 package com.example.steam.domain.user;
 
 import com.example.steam.domain.friendship.Friendship;
+import com.example.steam.domain.review.entity.GameReview;
+import com.example.steam.domain.review.entity.GameReviewComment;
 import com.example.steam.util.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"friendships", "reviews", "reviewComments"})
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
     @Id
@@ -39,9 +41,23 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     // 친구 관계
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Friendship> friendships;
+
+    // 리뷰 글
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<GameReview> reviews = new ArrayList<>();
+
+    // 리뷰에 달은 댓글
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<GameReviewComment> reviewComments = new ArrayList<>();
 
     @Builder
     public User(String username, String password, String email, Role role) {
@@ -50,6 +66,10 @@ public class User extends BaseEntity implements UserDetails {
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 
     @Override

@@ -31,7 +31,10 @@ public enum ErrorCode {
     JWT_MALFORMED(HttpStatus.UNAUTHORIZED, "잘못된 JWT 형식입니다."),
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT 토큰이 만료되었습니다."),
     JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 JWT 토큰입니다."),
-    JWT_ILLEGAL_ARGUMENT(HttpStatus.UNAUTHORIZED, "JWT 토큰이 비어있거나 잘못된 값입니다.");
+    JWT_ILLEGAL_ARGUMENT(HttpStatus.UNAUTHORIZED, "JWT 토큰이 비어있거나 잘못된 값입니다."),
+
+    // review
+    REVIEW_ALREADY_WRITE(HttpStatus.BAD_REQUEST, "이미 이 게임에 대한 리뷰를 작성 했습니다." );
 
     private final HttpStatus status;
     private final String message;
