@@ -95,10 +95,12 @@ public class GameReviewController {
         - 이미 눌렀다면 또 다시 부를 시 취소
      */
     @LoginUser
-    @PostMapping("/game/{gameid}/{reviewId}/like")
+    @PostMapping("/game/{gameId}/{reviewId}/like")
     public Response<GameReviewLikeResponse> toggleReviewLike(@AuthenticationPrincipal User user,
-                                                             @Valid @RequestBody GameReviewLikeRequest request) {
-        GameReviewLikeResponse response = reviewService.toggleReviewLike(user, request);
+                                                             @PathVariable("gameId") Long gameId,
+                                                             @PathVariable("reviewId") Long reviewId,
+                                                             @RequestParam("toggle") boolean toggleLike) {
+        GameReviewLikeResponse response = reviewService.toggleReviewLike(user, gameId, reviewId, toggleLike);
 
         return Response.success(response);
     }
