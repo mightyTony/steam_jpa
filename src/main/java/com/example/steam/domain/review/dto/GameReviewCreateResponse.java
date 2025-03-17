@@ -1,6 +1,5 @@
 package com.example.steam.domain.review.dto;
 
-import com.example.steam.domain.review.entity.ReviewType;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.querydsl.core.annotations.QueryProjection;
@@ -12,7 +11,7 @@ public class GameReviewCreateResponse {
     private Long reviewId;
     private Long gameId;
     private String content;
-    private ReviewType reviewType;
+    private boolean recommend;
     private boolean deleted;
     // LocalDateTime => String
     private String createdAt;
@@ -22,13 +21,13 @@ public class GameReviewCreateResponse {
     private String profileImageUrl;
 
     @QueryProjection
-    public GameReviewCreateResponse(Long reviewId, Long gameId, String content, ReviewType reviewType,
+    public GameReviewCreateResponse(Long reviewId, Long gameId, String content, boolean recommend,
                                     boolean deleted, String createdAt, String lastModifiedAt,
                                     String username, String nickname, String profileImageUrl) {
         this.reviewId = reviewId;
         this.gameId = gameId;
         this.content = content;
-        this.reviewType = reviewType;
+        this.recommend = recommend;
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;

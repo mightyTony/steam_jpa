@@ -3,6 +3,7 @@ package com.example.steam.domain.profile;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +22,10 @@ public class Profile extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Builder
+    public Profile(User user, String content) {
+        this.user = user;
+        this.content = content;
+    }
 }

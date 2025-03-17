@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     //Auth
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "이미 가입된 아이디 입니다."),
+    DUPLICATED_USER_NAME_OR_EMAIL(HttpStatus.CONFLICT, "이미 가입된 아이디 혹은 이메일 입니다"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러"),
     NOT_FOUND_USER_NAME(HttpStatus.BAD_REQUEST, "존재 하지 않은 아이디 입니다" ),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호를 틀리셨습니다" ),
@@ -34,7 +35,8 @@ public enum ErrorCode {
     JWT_ILLEGAL_ARGUMENT(HttpStatus.UNAUTHORIZED, "JWT 토큰이 비어있거나 잘못된 값입니다."),
 
     // review
-    REVIEW_ALREADY_WRITE(HttpStatus.BAD_REQUEST, "이미 이 게임에 대한 리뷰를 작성 했습니다." );
+    REVIEW_ALREADY_WRITE(HttpStatus.BAD_REQUEST, "이미 이 게임에 대한 리뷰를 작성 했습니다." ),
+    NOT_FOUND_GAME_REVIEW(HttpStatus.BAD_REQUEST, "게임 리뷰가 존재 하지 않습니다." );
 
     private final HttpStatus status;
     private final String message;

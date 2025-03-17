@@ -34,9 +34,8 @@ public class GameReview extends BaseEntity {
     private Game game;
 
     // 추천, 비추천
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReviewType reviewType;
+    private Boolean recommend;
 
     @Column(nullable = false, length = 1000)
     private String content;
@@ -51,8 +50,8 @@ public class GameReview extends BaseEntity {
     private List<GameReviewLike> likes = new ArrayList<>();
 
     // 리뷰 수정
-    public void update(ReviewType reviewType, String content) {
-        this.reviewType = reviewType;
+    public void update(boolean recommend, String content) {
+        this.recommend = recommend;
         this.content = content;
     }
 
@@ -62,10 +61,10 @@ public class GameReview extends BaseEntity {
     }
 
     @Builder
-    public GameReview(User user, Game game, ReviewType reviewType, String content, boolean deleted) {
+    public GameReview(User user, Game game, boolean recommend, String content, boolean deleted) {
         this.user = user;
         this.game = game;
-        this.reviewType = reviewType;
+        this.recommend = recommend;
         this.content = content;
         this.deleted = deleted;
     }

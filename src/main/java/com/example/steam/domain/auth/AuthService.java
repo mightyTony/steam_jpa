@@ -3,6 +3,8 @@ package com.example.steam.domain.auth;
 import com.example.steam.config.jwt.JwtTokenProvider;
 import com.example.steam.domain.auth.dto.UserJoinRequest;
 import com.example.steam.domain.auth.dto.UserJoinResponse;
+import com.example.steam.domain.profile.Profile;
+import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.Role;
 import com.example.steam.domain.user.User;
 import com.example.steam.exception.ErrorCode;
@@ -21,11 +23,16 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ProfileRepository profileRepository;
+
     @Transactional
     public UserJoinResponse join(UserJoinRequest request) {
         // 이미 가입된 아이디인지
-        if(authRepository.findByUsername(request.getUsername()).isPresent()) {
-           throw new SteamException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s 는 중복된 이름 입니다.", request.getUsername()));
+//        if(authRepository.findByUsername(request.getUsername()).isPresent()) {
+//           throw new SteamException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s 는 중복된 이름 입니다.", request.getUsername()));
+//        }
+        if(authRepository.findByUsernameOrEmail(request.getUsername(), request.getEmail()).isPresent()){
+            throw new SteamException(ErrorCode.DUPLICATED_USER_NAME_OR_EMAIL);
         }
 
         // 회원가입 진행
@@ -38,7 +45,11 @@ public class AuthService {
 
         authRepository.save(user);
 
-        // TODO: 기본 프로필 생성
+        Profile profile = Profile.builder()
+                .user(user)
+                .content("")
+                .build();
+        profileRepository.save(profile);
 
         return UserJoinResponse.fromUser(user);
     }
