@@ -13,7 +13,6 @@ import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.CloseableThreadContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ import java.util.Optional;
 public class GameReviewService {
 
     private final GameReviewRepository gameReviewRepository;
-    private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final GameReviewLikeRepository likeRepository;
 
