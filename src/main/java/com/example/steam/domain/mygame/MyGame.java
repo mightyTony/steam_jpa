@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "my_game")
 public class MyGame extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

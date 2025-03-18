@@ -1,4 +1,4 @@
-package com.example.steam.domain.friendship;
+package com.example.steam.domain.profile.friendship;
 
 import lombok.Getter;
 
