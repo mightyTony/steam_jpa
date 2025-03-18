@@ -1,4 +1,4 @@
-package com.example.steam.domain.friendship;
+package com.example.steam.domain.profile.friendship;
 
 import com.example.steam.domain.user.User;
 import com.example.steam.util.BaseEntity;
