@@ -44,7 +44,9 @@ public class GameDetailResponse {
     }
 
     @QueryProjection
-    public GameDetailResponse(Long id, String name, String developer, String publisher, String content, int price, String pictureUrl, int sales, Integer discount, int totalPrice, boolean onSale, String releaseDate, List<String> genres) {
+    public GameDetailResponse(Long id, String name, String developer, String publisher, String content,
+                              int price, String pictureUrl, int sales, Integer discount, int totalPrice,
+                              boolean onSale, String releaseDate, List<String> genres) {
         this.id = id;
         this.name = name;
         this.developer = developer;

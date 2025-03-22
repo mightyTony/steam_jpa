@@ -15,11 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class BaseEntity {
 
-    @Column(updatable = false, nullable = false)
-    @CreatedDate
+    @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    @LastModifiedDate
+    @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastModifiedAt;
+
 }

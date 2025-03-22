@@ -6,6 +6,7 @@ import com.example.steam.domain.game.dto.GameDetailResponse;
 import com.example.steam.domain.game.dto.QGameDetailResponse;
 import com.example.steam.domain.game.genre.QGameGenre;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,10 +36,13 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom{
 //                .and(GamePredicate.genreEquals(genre))
                 .and(GamePredicate.priceBetween(minPrice, maxPrice));
 
+//        QGame game = QGame.game;
+//        QGameGenre genre = QGameGenre.gameGenre;
+
         List<Game> games = queryFactory
                 .selectFrom(game)
                 .distinct()
-                .leftJoin(game.genres, gameGenre).fetchJoin()
+                .leftJoin(game.genres, gameGenre)
                 .where(whereClause)
                 .orderBy(getOrderSpecifier(category))
                 .offset(pageable.getOffset())
@@ -48,6 +52,7 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom{
         List<GameDetailResponse> results = games.stream()
                 .map(GameDetailResponse::new)
                 .collect(Collectors.toList());
+
 
         long total = queryFactory
                 .select(game.count())

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class Game extends BaseEntity {
     private String pictureUrl;
     private int sales;
     private int discount; // 할인률
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean onSale; // 판매 중
     @Column(nullable = false)
     private String releaseDate;
