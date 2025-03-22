@@ -28,4 +28,6 @@ public class GlobalControllerAdvice {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
+
+
 }

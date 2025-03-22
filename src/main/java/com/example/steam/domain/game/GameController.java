@@ -39,7 +39,6 @@ public class GameController {
             @RequestPart("data") GameCreateRequest requestDto,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile, @AuthenticationPrincipal User user) {
         Game game = gameService.createGame(requestDto);
-        //gameService.addGenresToGame(game, requestDto.getGenres());
 
         GameDetailResponse response = new GameDetailResponse(game);
 

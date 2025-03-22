@@ -33,10 +33,18 @@ public enum ErrorCode {
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT 토큰이 만료되었습니다."),
     JWT_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 JWT 토큰입니다."),
     JWT_ILLEGAL_ARGUMENT(HttpStatus.UNAUTHORIZED, "JWT 토큰이 비어있거나 잘못된 값입니다."),
+    JWT_IS_NULL(HttpStatus.UNAUTHORIZED, "토큰이 비어있습니다." ),
 
     // review
     REVIEW_ALREADY_WRITE(HttpStatus.BAD_REQUEST, "이미 이 게임에 대한 리뷰를 작성 했습니다." ),
-    NOT_FOUND_GAME_REVIEW(HttpStatus.BAD_REQUEST, "게임 리뷰가 존재 하지 않습니다." );
+    NOT_FOUND_GAME_REVIEW(HttpStatus.BAD_REQUEST, "게임 리뷰가 존재 하지 않습니다." ),
+
+    // friend
+    ALREADY_FRIENDSHIP(HttpStatus.BAD_REQUEST,"이미 친구 관계 이거나 요청을 보냈습니다"),
+    ILLEGAL_FRIENDSHIP(HttpStatus.BAD_REQUEST, "자신에게 친구 보냈습니다"),
+    ILLEGAL_FRIENDSHIP_REQUEST(HttpStatus.BAD_REQUEST, "친구 요청이 잘못 됐습니다." ),
+    NOT_FOUND_FRIENDSHIP(HttpStatus.CONFLICT,"친구 관계 데이터를 찾을 수 없습니다" ),
+    NOT_FOUND_MY_FRIENDSHIP(HttpStatus.CONFLICT,"아직 친구가 없습니다." );
 
     private final HttpStatus status;
     private final String message;

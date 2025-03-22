@@ -1,6 +1,8 @@
 package com.example.steam.config.jwt;
 
 import com.example.steam.config.CustomUserDetailsService;
+import com.example.steam.exception.ErrorCode;
+import com.example.steam.exception.SteamException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;

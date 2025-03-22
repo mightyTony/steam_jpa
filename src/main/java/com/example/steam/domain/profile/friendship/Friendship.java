@@ -3,6 +3,7 @@ package com.example.steam.domain.profile.friendship;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "friendship", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "friend_id"})
+        @UniqueConstraint(columnNames = {"sender_id", "receiver_id"})
 })
 public class Friendship extends BaseEntity {
     @Id
@@ -18,13 +19,25 @@ public class Friendship extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_id", nullable = false)
-    private User friend;
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private User receiver;
 
     @Enumerated(EnumType.STRING)
     private FriendStatus status;
+
+    @Builder
+    public Friendship(User sender, User receiver, FriendStatus status) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.status = status;
+    }
+
+    public void accepted() {
+        this.status = FriendStatus.ACCEPTED;
+    }
+
 }

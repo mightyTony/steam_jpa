@@ -51,16 +51,20 @@ public class JwtTokenProvider {
         catch (SecurityException | MalformedJwtException e) {
             log.warn("Invalid JWT - {}", e.getMessage());
             log.warn("EXCEPTED TOKEN : {}", token);
+            throw new SteamException(ErrorCode.JWT_MALFORMED);
         } catch (ExpiredJwtException e) {
             log.warn("Expired JWT - {}", e.getMessage());
             log.warn("EXCEPTED TOKEN : {}", token);
+            throw new SteamException(ErrorCode.JWT_EXPIRED);
         } catch (UnsupportedJwtException e) {
             log.warn("Unsupported JWT - {}", e.getMessage());
             log.warn("EXCEPTED TOKEN : {}", token);
+            throw new SteamException(ErrorCode.JWT_UNSUPPORTED);
         } catch (IllegalArgumentException e) {
             log.warn("JWT claims string is empty - {}", e.getMessage());
             log.warn("EXCEPTED TOKEN : {}", token);
+            throw new SteamException(ErrorCode.JWT_ILLEGAL_ARGUMENT);
         }
-        return false;
+        //return false;
     }
 }

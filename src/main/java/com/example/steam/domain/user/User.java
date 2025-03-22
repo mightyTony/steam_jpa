@@ -1,6 +1,6 @@
 package com.example.steam.domain.user;
 
-import com.example.steam.domain.friendship.Friendship;
+import com.example.steam.domain.profile.friendship.Friendship;
 import com.example.steam.domain.review.entity.GameReview;
 import com.example.steam.domain.review.entity.GameReviewComment;
 import com.example.steam.util.BaseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"friendships", "reviews", "reviewComments"})
+@ToString(exclude = { "senders", "receivers", "reviews", "reviewComments"})
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
     @Id
@@ -47,10 +47,13 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    // 친구 관계
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Friendship> friendships;
+    // 친구 요청을 보낸 목록 (sender)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Friendship> senders = new ArrayList<>();
 
+    // 친구 요청을 받은 목록 (receiver)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Friendship> receivers = new ArrayList<>();
     // 리뷰 글
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<GameReview> reviews = new ArrayList<>();
