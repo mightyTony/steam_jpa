@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FriendshipShortViewResponse {
-    private Long totalCount;
-    private List<FriendshipReadResponse> response;
+    private final Long totalCount;
+    private final List<FriendshipReadResponse> response;
 
     @QueryProjection
     public FriendshipShortViewResponse(Long totalCount, List<FriendshipReadResponse> response) {

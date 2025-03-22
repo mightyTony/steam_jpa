@@ -9,10 +9,10 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FriendshipSearchResponse {
-    private Long id;
-    private Long senderId;
-    private Long receiverId;
-    private FriendStatus status;
+    private final Long id;
+    private final Long senderId;
+    private final Long receiverId;
+    private final FriendStatus status;
 
     @QueryProjection
     public FriendshipSearchResponse(Long id, Long senderId, Long receiverId, FriendStatus status) {

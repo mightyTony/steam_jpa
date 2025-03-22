@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProfileResponse {
-    private Long userId;
-    private String content;
-    private String profileImageUrl;
+    private final Long userId;
+    private final String content;
+    private final String profileImageUrl;
 
     @QueryProjection
     public ProfileResponse(Long userId, String content, String profileImageUrl) {

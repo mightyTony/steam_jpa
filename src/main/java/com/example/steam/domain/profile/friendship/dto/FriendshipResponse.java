@@ -4,7 +4,6 @@ import com.example.steam.domain.profile.friendship.FriendStatus;
 import com.example.steam.domain.profile.friendship.Friendship;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 @Getter

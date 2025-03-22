@@ -2,17 +2,12 @@ package com.example.steam.domain.profile;
 
 import com.example.steam.domain.profile.dto.ProfileResponse;
 import com.example.steam.domain.profile.query.ProfileRepository;
-import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;
 import com.example.steam.domain.user.UserService;
-import com.example.steam.exception.ErrorCode;
-import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Slf4j

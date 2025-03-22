@@ -1,7 +1,6 @@
 package com.example.steam.util.annotation;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

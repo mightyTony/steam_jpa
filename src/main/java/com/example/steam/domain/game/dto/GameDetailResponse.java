@@ -4,7 +4,6 @@ import com.example.steam.domain.game.Game;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,7 +1,6 @@
 package com.example.steam.domain.game;
 
 import com.example.steam.domain.game.dto.*;
-import com.example.steam.domain.game.genre.GameGenre;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;
 import com.example.steam.util.annotation.AdminAuthorize;
@@ -13,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Slf4j
 @RestController

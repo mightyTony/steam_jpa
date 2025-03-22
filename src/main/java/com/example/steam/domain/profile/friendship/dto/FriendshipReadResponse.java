@@ -9,10 +9,10 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FriendshipReadResponse {
-    private Long userId;
-    private String username;
-    private String nickname;
-    private String profileImageUrl;
+    private final Long userId;
+    private final String username;
+    private final String nickname;
+    private final String profileImageUrl;
 
     @QueryProjection
     public FriendshipReadResponse(Long userId, String username, String nickname, String profileImageUrl) {
