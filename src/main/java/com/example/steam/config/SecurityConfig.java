@@ -24,7 +24,7 @@ public class SecurityConfig {
     private final JwtExceptionHandler jwtExceptionHandler;
     private final String[] AUTH_WHITELIST = {
             "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
-            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**","/api/v1/payment/success**", "/api/**"
+            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**","/api/v1/payment/success**",
     };
 
     @Bean

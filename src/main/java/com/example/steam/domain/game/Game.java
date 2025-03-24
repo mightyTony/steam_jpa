@@ -104,4 +104,8 @@ public class Game extends BaseEntity {
     public void dislike() {
         this.dislikeCount ++;
     }
+
+    public void uploadImage(String imageUrl) {
+        this.pictureUrl = imageUrl;
+    }
 }

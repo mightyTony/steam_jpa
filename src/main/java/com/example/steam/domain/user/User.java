@@ -75,6 +75,10 @@ public class User extends BaseEntity implements UserDetails {
         this.deleted = true;
     }
 
+    public void updateImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));

@@ -1,13 +1,16 @@
 package com.example.steam.domain.profile;
 
 import com.example.steam.domain.profile.dto.ProfileResponse;
+import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;
+import com.example.steam.util.annotation.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/profile")
@@ -39,5 +42,21 @@ public class ProfileController {
 //                                                       @AuthenticationPrincipal User user) {
 //
 //    }
+
+    /*
+        # 프로필 사진 변경
+        - 요청 : 파일, 유저 아이디
+        - 응답 : 이미지 경로
+     */
+    @PutMapping("/user/{userId}/edit/profile-image")
+    @LoginUser
+    public Response<String> editProfileImage(
+                                        @AuthenticationPrincipal User user,
+                                        @RequestPart("image")MultipartFile imageFile,
+                                        @PathVariable("userId") Long userId) throws IOException {
+        String imageUrl = profileService.editProfileImage(imageFile, userId);
+
+        return Response.success(imageUrl);
+    }
 
 }

@@ -7,6 +7,7 @@ import com.example.steam.domain.game.query.GameRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
+import com.example.steam.infra.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,9 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,6 +30,8 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final GameGenreRepository genreRepository;
+    private final S3Util s3Util;
+    private final String S3_GAME_DIRNAME = "image/game";
 
     // 게임 등록
     // TODO : 나중엔 사진 파일도 같이 보내야함
@@ -143,5 +149,42 @@ public class GameService {
         return gameRepository.findGamesByCategory(category,name,minPrice,maxPrice, pageable);
     }
 
+    @Transactional
+    public String editGamePicture(Long gameId, MultipartFile imageFile) throws IOException {
+        // 게임 검증
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
 
+        // 파일 검증
+        if(imageFile.isEmpty() || Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
+            throw new SteamException(ErrorCode.ILLEGAL_ARGUMENT_MULTIPARTFILE);
+        }
+        // 파일 업로드
+        String imageCloudFrontUrl = s3Util.upload(imageFile, S3_GAME_DIRNAME);
+
+        // 이미지 변경
+        game.uploadImage(imageCloudFrontUrl);
+        gameRepository.save(game);
+
+        log.info("[게임 이미지 변경] gameId : {}, uploadImageUrl : {}", game.getId(), game.getPictureUrl());
+
+        return game.getPictureUrl();
+    }
+
+//    @Transactional
+//    public String updateGamePicture(MultipartFile imageFile, Long gameId) {
+//        // 게임 검증
+//        Game game = gameRepository.findById(gameId)
+//                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+//        // 파일 검증
+//        if(imageFile.isEmpty()) {
+//            throw new SteamException(ErrorCode.NOT_FOUND_IMAGE_FILE);
+//        }
+//
+//        // 파일 사이즈
+//
+//        // 로컬에 파일 저장
+//
+//        // game jpa save
+//    }
 }

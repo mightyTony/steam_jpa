@@ -13,6 +13,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러"),
     NOT_FOUND_USER_NAME(HttpStatus.BAD_REQUEST, "존재 하지 않은 아이디 입니다" ),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호를 틀리셨습니다" ),
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "어드민 권한 없음" ),
 
     // Game
     ALREADY_EXISTED_GAME(HttpStatus.CONFLICT, "이미 존재하는 게임 입니다."),
@@ -44,7 +45,14 @@ public enum ErrorCode {
     ILLEGAL_FRIENDSHIP(HttpStatus.BAD_REQUEST, "자신에게 친구 보냈습니다"),
     ILLEGAL_FRIENDSHIP_REQUEST(HttpStatus.BAD_REQUEST, "친구 요청이 잘못 됐습니다." ),
     NOT_FOUND_FRIENDSHIP(HttpStatus.CONFLICT,"친구 관계 데이터를 찾을 수 없습니다" ),
-    NOT_FOUND_MY_FRIENDSHIP(HttpStatus.CONFLICT,"아직 친구가 없습니다." );
+    NOT_FOUND_MY_FRIENDSHIP(HttpStatus.CONFLICT,"아직 친구가 없습니다." ),
+
+    // FILE
+    NOT_FOUND_IMAGE_FILE(HttpStatus.BAD_REQUEST, "이미지 파일이 없습니다." ),
+    UPLOAD_FAIL(HttpStatus.CONFLICT,"S3 업로드 실패" ),
+    ILLEGAL_ARGUMENT_MULTIPARTFILE(HttpStatus.BAD_REQUEST, "이미지 파일 에러" );
+
+
 
     private final HttpStatus status;
     private final String message;

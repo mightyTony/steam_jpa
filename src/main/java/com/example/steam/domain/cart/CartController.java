@@ -15,18 +15,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/cart")
-@LoginUser
+//@LoginUser
 public class CartController {
     private final CartService cartService;
 
     // 장바구니 추가
+    @LoginUser
     @PostMapping()
-    public Response<Void> addToCart(@RequestParam("game") Long gameId, @AuthenticationPrincipal User user) {
+    public Response<Void> addToCart(@AuthenticationPrincipal User user,
+                                    @RequestParam("game") Long gameId) {
         cartService.addToCart(gameId, user);
         return Response.success();
     }
 
     // 장바구니 목록 조회
+    @LoginUser
     @GetMapping
     public Response<List<CartViewResponse>> getCartItems(@AuthenticationPrincipal User user) {
         log.info("[장바구니 목록 조회]");
@@ -36,6 +39,7 @@ public class CartController {
     }
 
     // 장바구니에서 삭제
+    @LoginUser
     @DeleteMapping("/{game}")
     public Response<Void> deleteCartItem(@PathVariable("game") Long gameId, @AuthenticationPrincipal User user) {
 

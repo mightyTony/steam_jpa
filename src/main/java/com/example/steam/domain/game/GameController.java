@@ -4,6 +4,7 @@ import com.example.steam.domain.game.dto.*;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;
 import com.example.steam.util.annotation.AdminAuthorize;
+import com.example.steam.util.annotation.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -97,5 +100,15 @@ public class GameController {
         Page<GameDetailResponse> result = gameService.getGamesByCategory(category, name, minPrice, maxPrice, pageable);
 
         return Response.success(result);
+    }
+
+    @PutMapping("{gameId}/edit/image")
+    @AdminAuthorize
+    public Response<String> editGamePicture(@PathVariable("gameId") Long gameId,
+                                            @RequestParam("image") MultipartFile imageFile,
+                                            @AuthenticationPrincipal User user) throws IOException {
+        String imageUrl = gameService.editGamePicture(gameId, imageFile);
+
+        return Response.success(imageUrl);
     }
 }
