@@ -1,9 +1,13 @@
 package com.example.steam.domain.profile;
 
+import com.example.steam.domain.profile.dto.CommentPostRequest;
+import com.example.steam.domain.profile.dto.CommentResponse;
 import com.example.steam.domain.profile.dto.ProfileResponse;
+import com.example.steam.domain.profile.dto.ProfileUpdateRequest;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;
 import com.example.steam.util.annotation.LoginUser;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,19 +40,22 @@ public class ProfileController {
 //        - 파라미터 : 닉네임, 프로필 수정, 할 말
 //        - 응답 : 프로필 정보
 //     */
-//    // todo : https://velog.io/@tyjk8997/Springboot-%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%99%80-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%EB%8F%99%EC%8B%9C%EC%97%90-%EC%B2%98%EB%A6%AC%ED%95%A0-%EB%95%8C-%EC%83%9D%EA%B8%B4-%EC%9D%B4%EC%8A%88
-//    @PatchMapping(value = "/user", consumes = {MediaType.APPLICATION_JSON_VALUE, "multipart/form-data"})
-//    public Response<ProfileResponse> updateProfileInfo(@RequestPart(value = "imageFile", required = false)MultipartFile imageFile,
-//                                                       @AuthenticationPrincipal User user) {
-//
-//    }
+    @PatchMapping(value = "/user/{userId}/edit/profile/info")
+    @LoginUser
+    public Response<ProfileResponse> updateProfileInfo(@AuthenticationPrincipal User user,
+                                                       @PathVariable("userId") Long userId,
+                                                       @RequestBody ProfileUpdateRequest request) {
+        ProfileResponse response = profileService.editProfileInfo(user, userId, request);
+
+        return Response.success(response);
+    }
 
     /*
         # 프로필 사진 변경
         - 요청 : 파일, 유저 아이디
         - 응답 : 이미지 경로
      */
-    @PutMapping("/user/{userId}/edit/profile-image")
+    @PutMapping("/user/{userId}/edit/profile/image")
     @LoginUser
     public Response<String> editProfileImage(
                                         @AuthenticationPrincipal User user,
@@ -59,4 +66,35 @@ public class ProfileController {
         return Response.success(imageUrl);
     }
 
+    /*
+        프로필 댓글 작성
+        POST
+        req : content, user, profileId
+        res : content, writerId, writerName, createdTime, updatedTime
+     */
+    @PostMapping("/{profileId}/comment")
+    @LoginUser
+    public Response<CommentResponse> addComment(@AuthenticationPrincipal User writer,
+                                                @PathVariable("profileId") Long profileId,
+                                                @Valid @RequestBody CommentPostRequest request) {
+        log.info("[프로필 댓글 작성] 시작 ");
+        CommentResponse response = profileService.postComment(writer, profileId, request);
+        log.info("[프로필 댓글 작성] 끝");
+        return Response.success(response);
+    }
+
+
+
+    /*
+        프로필 댓글 페이징 조회
+        GET
+        req : userId
+        res : Page<CommentResponse> , userId,content, writerId, writerName, createTime, updateTime
+     */
+
+    /*
+        프로필 댓글 삭제
+        DELETE
+        req : commentId
+     */
 }

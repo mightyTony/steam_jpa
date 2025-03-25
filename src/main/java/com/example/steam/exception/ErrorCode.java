@@ -14,6 +14,7 @@ public enum ErrorCode {
     NOT_FOUND_USER_NAME(HttpStatus.BAD_REQUEST, "존재 하지 않은 아이디 입니다" ),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호를 틀리셨습니다" ),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "어드민 권한 없음" ),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다"),
 
     // Game
     ALREADY_EXISTED_GAME(HttpStatus.CONFLICT, "이미 존재하는 게임 입니다."),
@@ -46,6 +47,9 @@ public enum ErrorCode {
     ILLEGAL_FRIENDSHIP_REQUEST(HttpStatus.BAD_REQUEST, "친구 요청이 잘못 됐습니다." ),
     NOT_FOUND_FRIENDSHIP(HttpStatus.CONFLICT,"친구 관계 데이터를 찾을 수 없습니다" ),
     NOT_FOUND_MY_FRIENDSHIP(HttpStatus.CONFLICT,"아직 친구가 없습니다." ),
+
+    // profile
+    NOT_FOUND_PROFILE(HttpStatus.CONFLICT, "프로필을 찾을 수 없습니다" ),
 
     // FILE
     NOT_FOUND_IMAGE_FILE(HttpStatus.BAD_REQUEST, "이미지 파일이 없습니다." ),

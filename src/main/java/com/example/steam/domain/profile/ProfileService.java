@@ -1,6 +1,11 @@
 package com.example.steam.domain.profile;
 
+import com.example.steam.domain.profile.comment.Comment;
+import com.example.steam.domain.profile.dto.CommentPostRequest;
+import com.example.steam.domain.profile.dto.CommentResponse;
 import com.example.steam.domain.profile.dto.ProfileResponse;
+import com.example.steam.domain.profile.dto.ProfileUpdateRequest;
+import com.example.steam.domain.profile.query.CommentRepository;
 import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;
@@ -21,6 +26,7 @@ import java.util.Objects;
 @Slf4j
 @RequiredArgsConstructor
 public class ProfileService {
+    private final CommentRepository commentRepository;
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
     private final UserService userService;
@@ -59,5 +65,48 @@ public class ProfileService {
         log.info("[유저 이미지 변경] userId : {}, uploadImageUrl : {}", user.getId(), user.getProfileImageUrl());
 
         return user.getProfileImageUrl();
+    }
+
+    @Transactional
+    public ProfileResponse editProfileInfo(User user, Long userId, ProfileUpdateRequest request) {
+        // 유저 본인 검증
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
+
+        if(user.equals(findUser)) {
+            throw new SteamException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // user-profile
+        Profile profile = profileRepository.findProfileByUser(user);
+        profile.update(request.getContent());
+        // save
+        profileRepository.save(profile);
+        // dto - > entity
+        ProfileResponse response = ProfileResponse.update(profile);
+
+        return response;
+    }
+
+    /*
+        프로필 댓글 작성
+        POST
+        req : content, user
+        res : content, writerId, writerName, createdTime, updatedTime
+     */
+    @Transactional
+    public CommentResponse postComment(User writer, Long profileId, CommentPostRequest request) {
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_PROFILE));
+
+        Comment comment = Comment.builder()
+                .content(request.getContent())
+                .profile(profile)
+                .writer(writer)
+                .build();
+
+        commentRepository.save(comment);
+
+        return CommentResponse.toDto(comment);
     }
 }

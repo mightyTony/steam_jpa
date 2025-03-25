@@ -27,9 +27,9 @@ public class LoginUserAspect {
             throw new SteamException(ErrorCode.JWT_ILLEGAL_ARGUMENT);
         }
 
-        boolean isExist = userRepository.existsById(user.getId());
-        if(!isExist) {
-            throw new SteamException(ErrorCode.NOT_FOUND_USER_NAME);
-        }
+//        boolean isExist = userRepository.existsById(user.getId());
+//        if(!isExist) {
+//            throw new SteamException(ErrorCode.NOT_FOUND_USER_NAME);
+//        }
     }
 }
