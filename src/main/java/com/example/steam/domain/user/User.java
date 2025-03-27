@@ -1,6 +1,5 @@
 package com.example.steam.domain.user;
 
-import com.example.steam.domain.profile.comment.Comment;
 import com.example.steam.domain.profile.friendship.Friendship;
 import com.example.steam.domain.review.entity.GameReview;
 import com.example.steam.domain.review.entity.GameReviewComment;

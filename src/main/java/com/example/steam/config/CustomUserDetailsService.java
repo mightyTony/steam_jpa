@@ -2,7 +2,6 @@ package com.example.steam.config;
 
 import com.example.steam.domain.auth.AuthRepository;
 import com.example.steam.domain.user.User;
-import com.example.steam.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
