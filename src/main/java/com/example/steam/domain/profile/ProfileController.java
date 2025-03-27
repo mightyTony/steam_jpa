@@ -10,6 +10,8 @@ import com.example.steam.util.annotation.LoginUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,24 +79,43 @@ public class ProfileController {
     public Response<CommentResponse> addComment(@AuthenticationPrincipal User writer,
                                                 @PathVariable("profileId") Long profileId,
                                                 @Valid @RequestBody CommentPostRequest request) {
-        log.info("[프로필 댓글 작성] 시작 ");
         CommentResponse response = profileService.postComment(writer, profileId, request);
-        log.info("[프로필 댓글 작성] 끝");
         return Response.success(response);
     }
 
-
-
-    /*
-        프로필 댓글 페이징 조회
-        GET
-        req : userId
-        res : Page<CommentResponse> , userId,content, writerId, writerName, createTime, updateTime
-     */
 
     /*
         프로필 댓글 삭제
         DELETE
         req : commentId
      */
+    @DeleteMapping("/{profileId}/comment/{commentId}")
+    @LoginUser
+    public Response<Void> deleteComment(@AuthenticationPrincipal User user,
+                                        @PathVariable("profileId") Long profileId,
+                                        @PathVariable("commentId") Long commentId) {
+
+        profileService.deleteComment(user, profileId, commentId);
+
+        return Response.success();
+    }
+
+
+    /*
+        프로필 댓글 페이징 조회
+        GET
+        req : userId, offset, size
+        res : Page<CommentResponse> , userId,content, writerId, writerName, createTime, updateTime
+     */
+    @GetMapping("/{profileId}/comment")
+    public Response<Page<CommentResponse>> getComments(@PathVariable("profileId") Long profileId,
+                                                       @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                                       @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                                       Pageable pageable) {
+
+        Page<CommentResponse> responses = profileService.getComments(profileId, page, size, pageable);
+
+        return Response.success(responses);
+    }
+
 }

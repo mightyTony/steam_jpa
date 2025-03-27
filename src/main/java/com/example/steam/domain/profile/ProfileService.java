@@ -15,6 +15,8 @@ import com.example.steam.exception.SteamException;
 import com.example.steam.infra.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,5 +110,41 @@ public class ProfileService {
         commentRepository.save(comment);
 
         return CommentResponse.toDto(comment);
+    }
+
+    // 프로필 내 댓글 삭제
+    @Transactional
+    public void deleteComment(User user, Long profileId, Long commentId) {
+        // 코멘트 작성자 혹은 프로필 유저만 삭제 가능함, 검증
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_PROFILE));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_COMMENT));
+
+        log.info("user : {}", user);
+        log.info("profile.getUser() : {}", profile.getUser());
+        log.info("comment.getWriter() :  {}", comment.getWriter());
+
+        if(user.equals(profile.getUser())  || user.equals(comment.getWriter())) {
+            commentRepository.deleteById(commentId);
+        } else {
+            throw new SteamException(ErrorCode.UNAUTHORIZED);
+        }
+
+    }
+
+    public Page<CommentResponse> getComments(Long profileId, int page, int size, Pageable pageable) {
+
+
+        Page<CommentResponse> result = commentRepository.findCommentsWithPaging(page,size,pageable, profileId);
+
+//        log.info("result : {} ", result);
+
+
+        if (result.isEmpty()) {
+            throw new SteamException(ErrorCode.NOT_FOUND_COMMENT);
+        }
+        return result;
     }
 }
