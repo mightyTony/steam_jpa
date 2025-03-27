@@ -16,7 +16,7 @@ public class AdminUserAspect {
 
     @Before("@annotation(com.example.steam.util.annotation.AdminAuthorize) && (args(..,user) || args(user,..))")
     public void validateIsAdmin(User user) {
-        log.info("[ADMIN AOP]");
+//        log.info("[ADMIN AOP]");
 
         if (user.getRole() != Role.ADMIN) {
             throw new SteamException(ErrorCode.UNAUTHORIZED_ACCESS);

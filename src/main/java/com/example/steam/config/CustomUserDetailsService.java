@@ -19,10 +19,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AuthRepository authRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("[JWT 검증 쿼리] 시작");
+//        log.info("[최초 로그인 CustomUserDetailsService] 시작");
         User user = authRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        log.info("[JWT 검증 쿼리] 끝");
+        log.info("[로그인] - user : {}", user.getUsername());
         return user;
     }
 }

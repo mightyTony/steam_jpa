@@ -80,6 +80,11 @@ public class User extends BaseEntity implements UserDetails {
         this.profileImageUrl = imageUrl;
     }
 
+    public void getIdAndNickname(Long id, String nickname) {
+        this.id = id;
+        this.nickname = nickname;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));

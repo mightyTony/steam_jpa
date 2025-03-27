@@ -1,48 +1,74 @@
 package com.example.steam.config.jwt;
 
+import com.example.steam.config.CustomUserDetailsService;
+import com.example.steam.domain.user.Role;
+import com.example.steam.domain.user.User;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.*;
 import io.jsonwebtoken.security.SecurityException;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final Key key;
+    private Key key;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    @PostConstruct
+    protected void init() {
+        byte[] decodedkey = Base64.getDecoder().decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(decodedkey);
     }
 
-    public String generateToken(String username, String role) {
+//    public JwtTokenProvider(CustomUserDetailsService customUserDetailsService) {
+//        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+//        this.customUserDetailsService = customUserDetailsService;
+//    }
+
+    public String createToken(Authentication authentication) {
+//        log.info("[createToken] key - {}", key.toString());
+        User user = (User) authentication.getPrincipal();
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        claims.put("userId", user.getId());
+        claims.put("role", user.getRole().name());
+        claims.put("nickname", user.getNickname());
+
+        Date now = new Date();
+        long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60;
+        Date expiration = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME);
+
         return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
                 .signWith(key)
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token)
-                .getBody().getSubject();
-    }
 
-    public String getRoleFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token)
-                .getBody().get("role", String.class);
-    }
-
+    // 토큰 유효, 만료 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -67,4 +93,36 @@ public class JwtTokenProvider {
         }
         //return false;
     }
+
+    // jwt 토큰에서 정보 추출
+    public Authentication getAuthentication(String accessToken) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key).build()
+                .parseClaimsJws(accessToken)
+                .getBody();
+
+        String username = claims.getSubject();
+        String role = claims.get("role",String.class);
+        Long userId = claims.get("userId", Long.class);
+        String nickname = claims.get("nickname", String.class);
+
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+
+        User user = User.builder()
+                .username(username)
+                .role(Role.valueOf(role))
+                .build();
+
+        user.getIdAndNickname(userId,nickname);
+
+        return new UsernamePasswordAuthenticationToken(user,null, authorities);
+    }
+
+    public String getUsername(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key).build()
+                .parseClaimsJws(token)
+                .getBody().getSubject();
+    }
+
 }
