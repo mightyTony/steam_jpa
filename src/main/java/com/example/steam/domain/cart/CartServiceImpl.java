@@ -4,7 +4,7 @@ import com.example.steam.domain.cart.dto.CartViewResponse;
 import com.example.steam.domain.cart.query.CartRepository;
 import com.example.steam.domain.game.Game;
 import com.example.steam.domain.game.query.GameRepository;
-import com.example.steam.domain.mygame.MyGameRepository;
+import com.example.steam.domain.profile.query.MyGameRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;
 import com.example.steam.exception.ErrorCode;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

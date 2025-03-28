@@ -1,10 +1,8 @@
 package com.example.steam.domain.profile;
 
 import com.example.steam.domain.profile.comment.Comment;
-import com.example.steam.domain.profile.dto.CommentPostRequest;
-import com.example.steam.domain.profile.dto.CommentResponse;
-import com.example.steam.domain.profile.dto.ProfileResponse;
-import com.example.steam.domain.profile.dto.ProfileUpdateRequest;
+import com.example.steam.domain.profile.dto.*;
+import com.example.steam.domain.profile.query.MyGameRepository;
 import com.example.steam.domain.profile.query.CommentRepository;
 import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.User;
@@ -22,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -33,6 +32,7 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final S3Util s3Util;
+    private final MyGameRepository myGameRepository;
     private final String S3_USER_DIRNAME = "image/user";
 
     @Transactional(readOnly = true)
@@ -145,6 +145,16 @@ public class ProfileService {
         if (result.isEmpty()) {
             throw new SteamException(ErrorCode.NOT_FOUND_COMMENT);
         }
+        return result;
+    }
+
+    public List<MyGameResponse> getMyGames(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
+
+        List<MyGameResponse> result = myGameRepository.getMyGamesByUser(user);
+
         return result;
     }
 }

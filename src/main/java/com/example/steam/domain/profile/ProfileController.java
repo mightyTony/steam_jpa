@@ -1,9 +1,7 @@
 package com.example.steam.domain.profile;
 
-import com.example.steam.domain.profile.dto.CommentPostRequest;
-import com.example.steam.domain.profile.dto.CommentResponse;
-import com.example.steam.domain.profile.dto.ProfileResponse;
-import com.example.steam.domain.profile.dto.ProfileUpdateRequest;
+import com.example.steam.domain.game.dto.GameResponse;
+import com.example.steam.domain.profile.dto.*;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;
 import com.example.steam.util.annotation.LoginUser;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/profile")
@@ -116,6 +115,15 @@ public class ProfileController {
         Page<CommentResponse> responses = profileService.getComments(profileId, page, size, pageable);
 
         return Response.success(responses);
+    }
+
+    // 보유 게임 조회
+    @GetMapping("/user/{userId}/game")
+    public Response<List<MyGameResponse>> getMyGames(@PathVariable("userId") Long userId) {
+
+        List<MyGameResponse> result = profileService.getMyGames(userId);
+
+        return Response.success(result);
     }
 
 }

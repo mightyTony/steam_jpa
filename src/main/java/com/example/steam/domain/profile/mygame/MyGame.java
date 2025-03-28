@@ -1,4 +1,4 @@
-package com.example.steam.domain.mygame;
+package com.example.steam.domain.profile.mygame;
 
 import com.example.steam.domain.game.Game;
 import com.example.steam.domain.user.User;
