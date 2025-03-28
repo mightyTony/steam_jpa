@@ -68,12 +68,13 @@ public class AuthService {
             throw new SteamException(ErrorCode.INVALID_PASSWORD);
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
+//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
+//
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
         // 토큰 생성
-
-        return jwtTokenProvider.createToken(authentication);
+        return jwtTokenProvider.createToken(authenticationToken);
     }
 }

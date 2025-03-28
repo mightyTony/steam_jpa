@@ -24,14 +24,6 @@ public class GameController {
 
     private final GameService gameService;
 
-//    @AdminAuthorize
-//    @PostMapping("")
-//    public Response<Game> createGame(@RequestPart("data") GameCreateRequest requestDto, @RequestPart("image") MultipartFile imageFile) {
-//        Game game = gameService.createGame(requestDto, imageFile);
-//
-//        return  Response.success();
-//    }
-
     // 게임 등록
     @AdminAuthorize
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, "multipart/form-data"})
@@ -102,6 +94,7 @@ public class GameController {
         return Response.success(result);
     }
 
+    // 게임 이미지 업데이트
     @PutMapping("{gameId}/edit/image")
     @AdminAuthorize
     public Response<String> editGamePicture(@PathVariable("gameId") Long gameId,

@@ -30,7 +30,7 @@ public class AuthController {
         String accessToken = authService.login(request.getUsername(), request.getPassword());
 
         response.addHeader("Authorization", accessToken);
-
+        log.info("[로그인] user - {}", request.getUsername());
         return Response.success();
     }
 }
