@@ -21,6 +21,7 @@ public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
                 .select(new QProfileResponse(
                         user.id,
                         profile.content,
+                        user.nickname,
                         user.profileImageUrl
                 ))
                 .from(profile)

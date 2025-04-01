@@ -1,5 +1,7 @@
 package com.example.steam.domain.user;
 
+import com.example.steam.domain.profile.Profile;
+import com.example.steam.domain.profile.comment.Comment;
 import com.example.steam.domain.profile.friendship.Friendship;
 import com.example.steam.domain.review.entity.GameReview;
 import com.example.steam.domain.review.entity.GameReviewComment;
@@ -59,6 +61,13 @@ public class User extends BaseEntity implements UserDetails {
     // 리뷰에 달은 댓글
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<GameReviewComment> reviewComments = new ArrayList<>();
+
+    // 프로필 댓글
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Profile profile;
 
     @Builder
     public User(String username, String password, String email, Role role) {

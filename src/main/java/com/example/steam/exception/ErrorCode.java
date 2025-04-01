@@ -47,6 +47,7 @@ public enum ErrorCode {
     ILLEGAL_FRIENDSHIP_REQUEST(HttpStatus.BAD_REQUEST, "친구 요청이 잘못 됐습니다." ),
     NOT_FOUND_FRIENDSHIP(HttpStatus.CONFLICT,"친구 관계 데이터를 찾을 수 없습니다" ),
     NOT_FOUND_MY_FRIENDSHIP(HttpStatus.CONFLICT,"아직 친구가 없습니다." ),
+    NOT_PENDING_STATUS_FRIENDSHIP(HttpStatus.BAD_REQUEST, "요청 대기 상태가 아닙니다" ),
 
     // profile
     NOT_FOUND_PROFILE(HttpStatus.CONFLICT, "프로필을 찾을 수 없습니다" ),
@@ -55,7 +56,7 @@ public enum ErrorCode {
     // FILE
     NOT_FOUND_IMAGE_FILE(HttpStatus.BAD_REQUEST, "이미지 파일이 없습니다." ),
     UPLOAD_FAIL(HttpStatus.CONFLICT,"S3 업로드 실패" ),
-    ILLEGAL_ARGUMENT_MULTIPARTFILE(HttpStatus.BAD_REQUEST, "이미지 파일 에러" ),;
+    ILLEGAL_ARGUMENT_MULTIPARTFILE(HttpStatus.BAD_REQUEST, "이미지 파일 에러" ), ;
 
 
 

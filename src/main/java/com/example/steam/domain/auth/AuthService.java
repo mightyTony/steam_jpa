@@ -7,6 +7,7 @@ import com.example.steam.domain.profile.Profile;
 import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.Role;
 import com.example.steam.domain.user.User;
+import com.example.steam.domain.user.UserRepository;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
+    private final UserRepository userRepository;
 
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
@@ -76,5 +78,41 @@ public class AuthService {
 
         // 토큰 생성
         return jwtTokenProvider.createToken(authenticationToken);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
+
+        log.info("[회원 탈퇴] - user : {}", user.getUsername());
+
+        userRepository.delete(user);
+    }
+
+    @Transactional
+    public UserJoinResponse joinAdmin(UserJoinRequest request) {
+        // 이미 가입된 아이디인지
+        if(authRepository.findByUsernameOrEmail(request.getUsername(), request.getEmail()).isPresent()){
+            throw new SteamException(ErrorCode.DUPLICATED_USER_NAME_OR_EMAIL);
+        }
+
+        // 회원가입 진행
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ADMIN)
+                .build();
+
+        authRepository.save(user);
+
+        Profile profile = Profile.builder()
+                .user(user)
+                .content("")
+                .build();
+        profileRepository.save(profile);
+
+        return UserJoinResponse.fromUser(user);
     }
 }

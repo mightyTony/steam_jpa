@@ -42,7 +42,7 @@ public class GameReviewService {
         GameReview review = GameReview.builder()
                 .user(user)
                 .game(game)
-                .recommend(request.isRecommend())
+                .recommend(request.getRecommend())
                 .content(request.getContent())
                 .deleted(false)
                 .build();

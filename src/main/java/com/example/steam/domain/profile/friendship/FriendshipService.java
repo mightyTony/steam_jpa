@@ -138,6 +138,12 @@ public class FriendshipService {
     @Transactional
     public void deleteMyFriendshipRequest(User user, Long requestId) {
 //        userService.isExisted(user);
+        Friendship friendship = friendRepository.findById(requestId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_FRIENDSHIP));
+
+        if (!friendship.getStatus().equals(FriendStatus.PENDING)){
+            throw new SteamException(ErrorCode.NOT_PENDING_STATUS_FRIENDSHIP);
+        }
 
         friendRepository.deleteById(requestId);
     }
@@ -150,8 +156,15 @@ public class FriendshipService {
     }
 
 
+    @Transactional
+    public void deleteMyFriendship(User user, Long friendshipId) {
+        Friendship friendship = friendRepository.findById(friendshipId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_FRIENDSHIP));
 
+        if(!user.getUsername().equals(friendship.getSender().getUsername()) || !user.getUsername().equals(friendship.getReceiver().getUsername())) {
+            throw new SteamException(ErrorCode.UNAUTHORIZED);
+        }
 
-
-
+        friendRepository.deleteById(friendshipId);
+    }
 }

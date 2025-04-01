@@ -85,14 +85,13 @@ public class Game extends BaseEntity {
     }
 
     public void update(String name, String developer, String publisher,
-                       String content, int price, String pictureUrl) {
+                       String content, int price) {
         this.name = name;
         this.developer = developer;
         this.publisher = publisher;
         this.content = content;
         this.price = price;
         this.totalPrice = price; // 가격 변경 시 같이 변경
-        this.pictureUrl = pictureUrl;
     }
 
     // todo 게임에 좋아요 구현 시 게임 리뷰에 좋아요/싫어요 값 변경 저장

@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,8 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<GameDetailResponse> findGamesByCategory(String category, String name, Integer minPrice, Integer maxPrice, Pageable pageable) {
+    public Page<GameDetailResponse> findGamesByCategory(String category, String name, Integer minPrice,
+                                                        Integer maxPrice, int page, int size) {
         BooleanBuilder whereClause = new BooleanBuilder();
 
         whereClause
@@ -40,14 +42,13 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom{
                 .leftJoin(game.genres, gameGenre)
                 .where(whereClause)
                 .orderBy(getOrderSpecifier(category))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .offset(page)
+                .limit(size)
                 .fetch();
 
         List<GameDetailResponse> results = games.stream()
                 .map(GameDetailResponse::new)
                 .collect(Collectors.toList());
-
 
         long total = queryFactory
                 .select(game.count())
@@ -55,6 +56,7 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom{
                 .where(whereClause)
                 .fetchOne();
 
+        Pageable pageable = PageRequest.of(page, size);
         return new PageImpl<>(results, pageable, total);
     }
 

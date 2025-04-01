@@ -34,15 +34,21 @@ public class GameService {
     private final String S3_GAME_DIRNAME = "image/game";
 
     // 게임 등록
-    // TODO : 나중엔 사진 파일도 같이 보내야함
     @Transactional
-    public Game createGame(GameCreateRequest request) {
+    public Game createGame(GameCreateRequest request, MultipartFile imageFile) throws IOException {
         // 1. 이미 존재하는 게임인지 체크
         Optional<Game> isExistedGame = gameRepository.findByName(request.getName());
         if(isExistedGame.isPresent()) {
             throw new SteamException(ErrorCode.ALREADY_EXISTED_GAME);
         }
         // 2. 이미지 업로드
+
+        // 파일 검증
+        if(imageFile.isEmpty() || Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
+            throw new SteamException(ErrorCode.ILLEGAL_ARGUMENT_MULTIPARTFILE);
+        }
+        // 파일 업로드
+        String imageCloudFrontUrl = s3Util.upload(imageFile, S3_GAME_DIRNAME);
 
         // 3. 게임 저장
         Game game = Game.builder()
@@ -52,7 +58,7 @@ public class GameService {
                 .content(request.getContent())
                 .price(request.getPrice())
                 .totalPrice(request.getPrice())
-                //.pictureUrl(request.get)
+                .pictureUrl(imageCloudFrontUrl)
                 .releaseDate(request.getReleaseDate())
                 .onSale(false)
                 .build();
@@ -135,8 +141,7 @@ public class GameService {
                 request.getDeveloper(),
                 request.getPublisher(),
                 request.getContent(),
-                request.getPrice(),
-                request.getPictureUrl()
+                request.getPrice()
         );
 
         gameRepository.save(game);
@@ -145,8 +150,8 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Page<GameDetailResponse> getGamesByCategory(String category, String name, Integer minPrice, Integer maxPrice, Pageable pageable) {
-        return gameRepository.findGamesByCategory(category,name,minPrice,maxPrice, pageable);
+    public Page<GameDetailResponse> getGamesByCategory(String category, String name, Integer minPrice, Integer maxPrice, int page, int size) {
+        return gameRepository.findGamesByCategory(category,name,minPrice,maxPrice, page, size);
     }
 
     @Transactional

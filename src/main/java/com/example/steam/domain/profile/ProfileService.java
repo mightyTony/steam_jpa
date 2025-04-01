@@ -53,6 +53,11 @@ public class ProfileService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
 
+        // 유저 본인 검증
+        if(!user.getId().equals(userId)) {
+            throw new SteamException(ErrorCode.UNAUTHORIZED);
+        }
+
         // 파일 검증
         if(imageFile.isEmpty() || Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
             throw new SteamException(ErrorCode.ILLEGAL_ARGUMENT_MULTIPARTFILE);
@@ -71,11 +76,11 @@ public class ProfileService {
 
     @Transactional
     public ProfileResponse editProfileInfo(User user, Long userId, ProfileUpdateRequest request) {
-        // 유저 본인 검증
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
 
-        if(user.equals(findUser)) {
+        // 유저 본인 검증
+        if(!findUser.getId().equals(user.getId())) {
             throw new SteamException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -84,10 +89,8 @@ public class ProfileService {
         profile.update(request.getContent());
         // save
         profileRepository.save(profile);
-        // dto - > entity
-        ProfileResponse response = ProfileResponse.update(profile);
 
-        return response;
+        return ProfileResponse.update(profile);
     }
 
     /*
