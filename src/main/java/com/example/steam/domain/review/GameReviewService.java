@@ -8,7 +8,6 @@ import com.example.steam.domain.review.entity.GameReviewLike;
 import com.example.steam.domain.review.query.GameReviewLikeRepository;
 import com.example.steam.domain.review.query.GameReviewRepository;
 import com.example.steam.domain.user.User;
-import com.example.steam.domain.user.UserRepository;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;

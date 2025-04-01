@@ -1,6 +1,5 @@
 package com.example.steam.domain.profile;
 
-import com.example.steam.domain.game.dto.GameResponse;
 import com.example.steam.domain.profile.dto.*;
 import com.example.steam.domain.user.User;
 import com.example.steam.util.Response;

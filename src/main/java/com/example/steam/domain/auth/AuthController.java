@@ -3,7 +3,6 @@ package com.example.steam.domain.auth;
 import com.example.steam.domain.auth.dto.UserJoinRequest;
 import com.example.steam.domain.auth.dto.UserJoinResponse;
 import com.example.steam.domain.auth.dto.UserLoginRequest;
-import com.example.steam.domain.auth.dto.UserLoginResponse;
 import com.example.steam.util.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

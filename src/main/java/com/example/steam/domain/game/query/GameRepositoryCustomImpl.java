@@ -1,10 +1,7 @@
 package com.example.steam.domain.game.query;
 
 import com.example.steam.domain.game.Game;
-import com.example.steam.domain.game.QGame;
 import com.example.steam.domain.game.dto.GameDetailResponse;
-import com.example.steam.domain.game.dto.QGameDetailResponse;
-import com.example.steam.domain.game.genre.QGameGenre;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
