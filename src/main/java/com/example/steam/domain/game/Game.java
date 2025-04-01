@@ -93,16 +93,21 @@ public class Game extends BaseEntity {
         this.totalPrice = price; // 가격 변경 시 같이 변경
     }
 
-    // todo 게임에 좋아요 구현 시 게임 리뷰에 좋아요/싫어요 값 변경 저장
     public void like() {
         this.likeCount ++;
     }
 
-    // todo 게임에 좋아요 구현 시 게임 리뷰에 좋아요/싫어요 값 변경 저장
     public void dislike() {
         this.dislikeCount ++;
     }
 
+    public void like_remove() {
+        this.likeCount --;
+    }
+
+    public void dislike_remove(){
+        this.likeCount --;
+    }
     public void uploadImage(String imageUrl) {
         this.pictureUrl = imageUrl;
     }

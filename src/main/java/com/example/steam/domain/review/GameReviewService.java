@@ -77,6 +77,14 @@ public class GameReviewService {
         // 3. 수정
         gameReview.update(request.getRecommend(),request.getContent());
 
+        if (request.getRecommend().booleanValue() == Boolean.TRUE && gameReview.getRecommend() == Boolean.FALSE) {
+            game.like();
+            game.dislike_remove();
+        } else if (request.getRecommend().booleanValue() == Boolean.FALSE && gameReview.getRecommend() == Boolean.TRUE){
+            game.dislike();
+            game.like_remove();
+        }
+
         GameReview savedReview = gameReviewRepository.save(gameReview);
 
         return GameReviewUpdateResponse.fromEntity(savedReview);
