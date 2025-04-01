@@ -46,6 +46,14 @@ public class GameReviewService {
                 .deleted(false)
                 .build();
 
+        // 4. 리뷰 추천/비추천을 게임에 저장
+        if (request.getRecommend().booleanValue() == Boolean.TRUE){
+            game.like();
+        } else {
+            game.dislike();
+        }
+
+        gameRepository.save(game);
         GameReview savedReview = gameReviewRepository.save(review);
         // 4. toDto
         return gameReviewRepository.findReviewById(savedReview.getId());

@@ -87,7 +87,6 @@ public class GameService {
     // 특정 게임 상세 조회
     @Transactional(readOnly = true)
     public GameDetailResponse getGameById(Long id) {
-        // todo 장르도 같이 가져와야해
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
         return new GameDetailResponse(game);
