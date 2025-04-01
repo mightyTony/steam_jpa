@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "friendship", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"sender_id", "receiver_id"})
-})
+        @UniqueConstraint(columnNames = {"sender_id", "receiver_id"})}
+)
 public class Friendship extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

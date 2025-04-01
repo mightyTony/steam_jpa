@@ -18,7 +18,7 @@ import java.util.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = { "senders", "receivers", "reviews", "reviewComments"})
+@ToString(exclude = {"senders", "receivers", "reviews", "reviewComments", "comments", "profile"})
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
     @Id

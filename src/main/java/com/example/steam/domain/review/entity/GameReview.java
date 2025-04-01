@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "review", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "user_id", "game_id" }) // 게임당 유저는 리뷰를 한개만 쓸 수 있게 유니크 설정
-}) // 한 게임당 리뷰 하나
+})
 public class GameReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

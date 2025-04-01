@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "review_like", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "review_id"})
-}) // 좋아요는 한번만
+        @UniqueConstraint(columnNames = {"user_id", "review_id"}) // 좋아요는 한번만
+})
 public class GameReviewLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
