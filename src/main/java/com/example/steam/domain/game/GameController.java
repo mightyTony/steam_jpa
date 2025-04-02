@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,6 +31,10 @@ import java.io.IOException;
 public class GameController {
 
     private final GameService gameService;
+    private static final String WEEKLY_RANKING_KEY = "game:ranking:weekly";
+    private static final String MONTHLY_RANKING_KEY = "game:ranking:monthly";
+    private static final Duration WEEKLY_TTL = Duration.ofDays(7);
+    private static final Duration MONTHLY_TTL = Duration.ofDays(31);
 
     @Operation(summary = "게임 등록", description = "관리자가 게임을 등록합니다. JSON 데이터 + 이미지 파일 업로드 필요")
     @AdminAuthorize
@@ -123,5 +130,25 @@ public class GameController {
         String imageUrl = gameService.editGamePicture(gameId, imageFile);
 
         return Response.success(imageUrl);
+    }
+
+    // 주간 판매 랭킹
+    @Operation(summary = "주간 게임 판매 랭킹", description = "캐시에서 조회, 없을 시 DB 조회 후 캐시 저장")
+    @GetMapping("/weekly")
+    public Response<List<GameRankingResponse>> getWeeklyGameRanking() {
+
+        List<GameRankingResponse> result = gameService.getTopGameRanking(WEEKLY_RANKING_KEY, WEEKLY_TTL, LocalDateTime.now().minusWeeks(1));
+
+        return Response.success(result);
+    }
+
+    // 월간 판매 랭킹
+    @Operation(summary = "월간 게임 판매 랭킹", description = "캐시에서 조회, 없을 시 DB 조회 후 캐시 저장")
+    @GetMapping("/monthly")
+    public Response<List<GameRankingResponse>> getMonthlyGameRanking() {
+
+        List<GameRankingResponse> result = gameService.getTopGameRanking(MONTHLY_RANKING_KEY, MONTHLY_TTL, LocalDateTime.now().minusMonths(1));
+
+        return Response.success(result);
     }
 }

@@ -227,7 +227,18 @@ public class KakaoPayService implements OrderService {
         // 장바구니에서 결제된 게임 삭제
         removeGamesFromCart(order);
 
+        // 게임 판매량 카운트 ++
+        increaseGameSalesCount(order);
+
         return response;
+    }
+
+    private void increaseGameSalesCount(Order order) {
+        List<OrderItem> items = order.getOrderItems();
+        for (OrderItem item : items) {
+            Game game = item.getGame();
+            game.increaseSales();
+        }
     }
 
     @Override

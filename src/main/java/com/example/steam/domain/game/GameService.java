@@ -11,12 +11,15 @@ import com.example.steam.infra.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +33,7 @@ public class GameService {
     private final GameRepository gameRepository;
     private final GameGenreRepository genreRepository;
     private final S3Util s3Util;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final String S3_GAME_DIRNAME = "image/game";
 
     // 게임 등록
@@ -172,6 +176,24 @@ public class GameService {
         log.info("[게임 이미지 변경] gameId : {}, uploadImageUrl : {}", game.getId(), game.getPictureUrl());
 
         return game.getPictureUrl();
+    }
+
+    public List<GameRankingResponse> getTopGameRanking(String redisKey, Duration redisTTL, LocalDateTime fromDate) {
+        Object cachedData = redisTemplate.opsForValue().get(redisKey);
+
+        if(cachedData != null) {
+            log.info("[캐시 히트] 게임 랭킹 데이터 key: {}", redisKey);
+            return (List<GameRankingResponse>)cachedData;
+        }
+
+        log.warn("[CACHE MISS] key: {} - DB 조회 후 캐싱 시도", redisKey);
+        List<GameRankingResponse> result = gameRepository.findTopGamesBySales(fromDate);
+
+        // 캐싱
+        redisTemplate.opsForValue().set(redisKey, result, redisTTL);
+        log.info("[CACHE PUT] key: {}, TTL: {} days, size: {}", redisKey, redisTTL.toDays(), result.size());
+
+        return result;
     }
 
 //    @Transactional

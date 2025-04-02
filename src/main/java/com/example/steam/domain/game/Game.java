@@ -111,4 +111,8 @@ public class Game extends BaseEntity {
     public void uploadImage(String imageUrl) {
         this.pictureUrl = imageUrl;
     }
+
+    public void increaseSales() {
+        this.sales += 1;
+    }
 }
