@@ -37,7 +37,6 @@ public class GameReviewRepositoryCustomImpl implements GameReviewRepositoryCusto
     QGameReview review = QGameReview.gameReview;
     QGameReviewLike reviewLike = QGameReviewLike.gameReviewLike;
 
-    // TODO jojoldu
     @Override
     public boolean findByUserAndGame(User user, Game game) {
         Integer fetchOne = queryFactory

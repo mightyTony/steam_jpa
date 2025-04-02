@@ -18,7 +18,7 @@ public class GameScheduler {
     private final GameRepository gameRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    // TODO : 주간 판매량 순 게임 목록 페이징 -> 레디스 캐시
+
     // 주간 랭킹 - 매주 월요일 오전 3시 실행
     @Scheduled(cron = "0 0 3 * * MON", zone = "Asia/Seoul")
     public void updateWeeklyGameRanking() {

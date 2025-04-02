@@ -75,7 +75,7 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
                 )
                 .fetch();
 
-        // FIXME 흠.. union all 같은 방법 없을까
+        // querydsl엔 union 지원 안되서 그냥 합쳐야 하는듯..
 
         // 합치기
         List<FriendshipReadResponse> result = new ArrayList<>();

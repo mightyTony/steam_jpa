@@ -41,7 +41,6 @@ public class ProfileService {
         userService.isExistedBoolean(userId);
         log.info("[프로필 정보 쿼리]");
         // 프로필 정보
-        // fixme N+1 발생
         return profileRepository.findByUserId(userId);
 
 

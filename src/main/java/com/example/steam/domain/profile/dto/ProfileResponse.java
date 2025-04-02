@@ -32,7 +32,6 @@ public class ProfileResponse {
         this.profileImageUrl = profileImageUrl;
     }
 
-    // Fixme
     public static ProfileResponse update(Profile profile) {
         ProfileResponse response = new ProfileResponse();
         response.userId = profile.getUser().getId();

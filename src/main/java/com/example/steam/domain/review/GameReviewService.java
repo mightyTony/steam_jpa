@@ -59,7 +59,6 @@ public class GameReviewService {
         return gameReviewRepository.findReviewById(savedReview.getId());
     }
 
-    // TODO 성능 개선 필요 https://jojoldu.tistory.com/516
     private boolean checkAlreadyWriteReview(User user, Game game) {
         return gameReviewRepository.findByUserAndGame(user,game);
     }
