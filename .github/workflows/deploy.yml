@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -25,8 +25,8 @@ jobs:
       - name: Copy jar to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: 15.164.7.19
-          username: ec2-user
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           source: build/libs/steam-0.0.1-SNAPSHOT.jar
           target: /home/ec2-user/app/
@@ -34,8 +34,8 @@ jobs:
       - name: Run jar on EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ EC2_HOST }}
-          username: ${{ EC2_USERNAME }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           script: |
             pkill -f 'steam-0.0.1-SNAPSHOT.jar' || true
