@@ -23,9 +23,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//import static com.example.steam.domain.game.QGame.game;
-//import static com.example.steam.domain.game.genre.QGameGenre.gameGenre;
-
 @Repository
 @RequiredArgsConstructor
 public class GameRepositoryCustomImpl implements GameRepositoryCustom {
@@ -42,9 +39,6 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom {
                 .and(GamePredicate.nameContain(name))
 //                .and(GamePredicate.genreEquals(genre))
                 .and(GamePredicate.priceBetween(minPrice, maxPrice));
-
-//        QGame game = QGame.game;
-//        QGameGenre genre = QGameGenre.gameGenre;
 
         List<Game> games = queryFactory
                 .selectFrom(game)

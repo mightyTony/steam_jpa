@@ -38,6 +38,7 @@ out/
 
 ### yml ###
 *.yml
+!.github/workflows/*.yml
 
 ## querydsl ###
 src/main/generated/
