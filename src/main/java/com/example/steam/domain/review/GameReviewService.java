@@ -36,7 +36,7 @@ public class GameReviewService {
         // 1. 게임 체크
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
-        if(!myGameRepository.findByGame_IdAndUser(gameId, user)){
+        if(!myGameRepository.existsByGame_IdAndUser(gameId, user)){
             throw new SteamException(ErrorCode.NOT_FOUND_IN_MYGAME);
         }
 
