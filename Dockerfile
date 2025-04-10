@@ -8,4 +8,5 @@ COPY ${JAR_FILE} app.jar
 EXPOSE 8080
 
 # 애플리케이션 실행 명령어
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app.jar"]
+#CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "-Dspring.config.location=file:/app/application-prod.yml", "/app.jar"]
