@@ -1,16 +1,15 @@
-name: Deploy to EC2
+name: Spring Boot CI/CD to EC2
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout Source Code
         uses: actions/checkout@v3
 
       - name: Set up JDK 17
@@ -19,25 +18,42 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Gradle
-        run: ./gradlew clean bootJar
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
 
-      - name: Copy jar to EC2
-        uses: appleboy/scp-action@v0.1.7
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Create application-prod.yml from secrets
+        run: |
+          echo "${{ secrets.APPLICATION_PROD_YML }}" > build/libs/application-prod.yml
+
+      - name: Deploy JAR and Config to EC2 via SCP
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
+          username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          source: build/libs/steam-0.0.1-SNAPSHOT.jar
-          target: /home/ec2-user/app/
+          source: build/libs/*.jar,build/libs/application-prod.yml
+          target: /home/ec2-user/app
+          strip_components: 1
 
-      - name: Run jar on EC2
+      - name: SSH into EC2 and restart Spring Boot with prod profile
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
+          username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
-            pkill -f 'steam-0.0.1-SNAPSHOT.jar' || true
-            nohup java -jar /home/ec2-user/app/steam-0.0.1-SNAPSHOT.jar \
-              --spring.profiles.active=prod > /home/ec2-user/app/nohup.out 2>&1 &
+            echo "Restarting Spring Boot app on EC2..."
+            
+            # Kill existing Spring Boot process (if any)
+            pkill -f 'java -jar' || true
+            
+            # Find latest jar
+            APP_JAR=$(ls /home/ec2-user/app/*.jar | head -n 1)
+            
+            # Start new process with prod profile and external config
+            nohup java -jar "$APP_JAR" --spring.profiles.active=prod --spring.config.location=file:/home/ec2-user/app/application-prod.yml > /home/ec2-user/app/nohup.out 2>&1 &
+            
+            echo "Application started with profile: prod"
