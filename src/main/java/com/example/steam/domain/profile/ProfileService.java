@@ -79,6 +79,7 @@ public class ProfileService {
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
 
         // 유저 본인 검증
+        log.info("findUser.getId : {}, user.getId() : {}, equals : {},", findUser.getId(), user.getId(), findUser.getId().equals(user.getId()));
         if(!findUser.getId().equals(user.getId())) {
             throw new SteamException(ErrorCode.UNAUTHORIZED);
         }
