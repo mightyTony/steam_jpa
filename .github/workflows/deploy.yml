@@ -36,7 +36,6 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: build/libs/*.jar,build/libs/application-prod.yml
           target: /home/ec2-user/app
-          strip_components: 1
 
       - name: SSH into EC2 and restart Spring Boot with prod profile
         uses: appleboy/ssh-action@v0.1.10
@@ -45,15 +44,45 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
-            echo "Restarting Spring Boot app on EC2..."
-            
+            echo "🔧 Restarting Spring Boot app on EC2..."
+
             # Kill existing Spring Boot process (if any)
             pkill -f 'java -jar' || true
-            
-            # Find latest jar
-            APP_JAR=$(ls /home/ec2-user/app/*.jar | head -n 1)
-            
+
+            # Find latest jar - 수정된 경로 반영
+            APP_JAR=$(ls /home/ec2-user/app/libs/*.jar | grep -v plain | head -n 1)
+
+            # Check if file exists
+            if [ ! -f "$APP_JAR" ]; then
+              echo "JAR file not found in expected location"
+              echo "Contents of /home/ec2-user/app/:"
+              ls -la /home/ec2-user/app/
+              echo "Contents of /home/ec2-user/app/libs/ (if exists):"
+              ls -la /home/ec2-user/app/libs/ || echo "Directory doesn't exist"
+              exit 1
+            fi
+
+            # Check config file
+            CONFIG_FILE="/home/ec2-user/app/libs/application-prod.yml"
+            if [ ! -f "$CONFIG_FILE" ]; then
+              echo "Config file not found!"
+              exit 1
+            fi
+
+            echo " Using JAR: $APP_JAR"
+            echo " Using config: $CONFIG_FILE"
+
             # Start new process with prod profile and external config
-            nohup java -jar "$APP_JAR" --spring.profiles.active=prod --spring.config.location=file:/home/ec2-user/app/application-prod.yml > /home/ec2-user/app/nohup.out 2>&1 &
-            
-            echo "Application started with profile: prod"
+            cd /home/ec2-user/app/
+            nohup java -jar "$APP_JAR" --spring.profiles.active=prod --spring.config.location=file:$CONFIG_FILE > /home/ec2-user/app/nohup.out 2>&1 &
+
+            # Check if process started successfully
+            sleep 5
+            if pgrep -f "$APP_JAR" > /dev/null; then
+              echo " Application started successfully with profile: prod"
+            else
+              echo " Failed to start application"
+              echo "Last 20 lines of log:"
+              tail -n 20 /home/ec2-user/app/nohup.out || echo "No log file found"
+              exit 1
+            fi
