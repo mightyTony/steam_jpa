@@ -24,7 +24,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
 //        config.setAllowedOrigins(List.of(ALLOWED_ORIGINS));
-        config.setAllowedOrigins(List.of("*"));
+//        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedHeaders(ALLOWED_HEADERS);
         config.setAllowedMethods(ALLOWED_METHODS);
         source.registerCorsConfiguration("/**", config);
