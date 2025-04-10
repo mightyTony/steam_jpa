@@ -12,8 +12,8 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    @Value("${origin.url}")
-    private String ALLOWED_ORIGINS;
+//    @Value("${origin.url}")
+//    private String ALLOWED_ORIGINS;
 
     //FIXME : 나중에 헤더 제한
     private static final List<String> ALLOWED_HEADERS = List.of("*");
@@ -24,7 +24,8 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(ALLOWED_ORIGINS));
+//        config.setAllowedOrigins(List.of(ALLOWED_ORIGINS));
+        config.setAllowedOrigins(List.of("*"));
         config.setAllowedHeaders(ALLOWED_HEADERS);
         config.setAllowedMethods(ALLOWED_METHODS);
         source.registerCorsConfiguration("/**", config);
