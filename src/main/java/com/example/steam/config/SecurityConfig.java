@@ -24,6 +24,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final JwtExceptionHandler jwtExceptionHandler;
     private final ApplicationContext applicationContext;
+    private final CorsConfig corsConfig;
     private final String[] AUTH_WHITELIST = {
             "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
             "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**","/api/v1/payment/success**",
@@ -42,6 +43,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtTokenProvider, applicationContext, jwtExceptionHandler);
         http
+                .cors(cors -> {
+                    cors.configurationSource(corsConfig.corsFilter());
+                })
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement((ssmt) -> ssmt.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin((form) -> form.disable())
