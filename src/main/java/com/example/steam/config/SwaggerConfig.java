@@ -92,7 +92,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .addServersItem(new Server().url("https://spring.tonyworld.kr"))
+//                .addServersItem(new Server().url("https://spring.tonyworld.kr"))
+                .addServersItem(new Server().url("https://tonyworld.kr"))
                 .components(components);
     }
 }
