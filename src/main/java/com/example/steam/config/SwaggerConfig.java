@@ -22,6 +22,7 @@ public class SwaggerConfig {
     // http://localhost:4860/swagger-ui/index.html#/
 
 //    @Profile({"local","dev"})
+    @Profile("dev")
     @Bean
     public OpenAPI devOpenAPI() {
 
