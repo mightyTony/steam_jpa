@@ -72,6 +72,12 @@
 <!--            <appender-ref ref="ASYNC_DISCORD" />-->
 <!--            <appender-ref ref="aws_cloud_watch_log" />-->
 <!--        </root>-->
+
+        <!-- 루트 로거: INFO 이상 콘솔, ERROR 이상 디스코드로만 보냄 -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_DISCORD"/>
+        </root>
     </springProfile>
 
     <!-- 다른 프로파일에 대한 루트 로거 (예: local, dev) -->
