@@ -62,7 +62,7 @@ public class ProfileService {
             throw new SteamException(ErrorCode.ILLEGAL_ARGUMENT_MULTIPARTFILE);
         }
         // 파일 업로드
-        String imageCloudFrontUrl = s3Util.upload(imageFile, S3_USER_DIRNAME);
+        String imageCloudFrontUrl = s3Util.uploadImageFile(imageFile, S3_USER_DIRNAME);
 
         // 이미지 변경
         user.updateImage(imageCloudFrontUrl);
