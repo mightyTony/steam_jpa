@@ -38,20 +38,20 @@ public class GameService {
 
     // 게임 등록
     @Transactional
-    public Game createGame(GameCreateRequest request, MultipartFile imageFile) throws IOException {
+    public Game createGame(GameCreateRequest request) {
         // 1. 이미 존재하는 게임인지 체크
         Optional<Game> isExistedGame = gameRepository.findByName(request.getName());
         if(isExistedGame.isPresent()) {
             throw new SteamException(ErrorCode.ALREADY_EXISTED_GAME);
         }
-        // 2. 이미지 업로드
 
-        // 파일 검증
-        if(imageFile.isEmpty() || Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
-            throw new SteamException(ErrorCode.ILLEGAL_ARGUMENT_MULTIPARTFILE);
-        }
-        // 파일 업로드
-        String imageCloudFrontUrl = s3Util.upload(imageFile, S3_GAME_DIRNAME);
+        // 2. 이미지 업로드
+//        // 파일 검증
+//        if(imageFile.isEmpty() || Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
+//            throw new SteamException(ErrorCode.ILLEGAL_ARGUMENT_MULTIPARTFILE);
+//        }
+//        // 파일 업로드
+//        String imageCloudFrontUrl = s3Util.upload(imageFile, S3_GAME_DIRNAME);
 
         // 3. 게임 저장
         Game game = Game.builder()
@@ -61,7 +61,7 @@ public class GameService {
                 .content(request.getContent())
                 .price(request.getPrice())
                 .totalPrice(request.getPrice())
-                .pictureUrl(imageCloudFrontUrl)
+                //.pictureUrl(imageCloudFrontUrl)
                 .releaseDate(request.getReleaseDate())
                 .onSale(false)
                 .build();
@@ -72,7 +72,6 @@ public class GameService {
         return gameRepository.saveAndFlush(game);
     }
 
-//    @Transactional
     private void addGenresToGame(Game game, List<String> genres) {
         log.info("[addGenresToGame]");
         List<GameGenre> genreList = new ArrayList<>();

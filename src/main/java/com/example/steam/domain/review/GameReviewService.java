@@ -124,24 +124,28 @@ public class GameReviewService {
     @Transactional
     public GameReviewLikeResponse toggleReviewLike(User user, Long gameId, Long reviewId, boolean toggleLike) {
         // 1. 게임 검증
-        Game game = gameRepository.findById(gameId).orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
         // 2. 리뷰 검증
-        GameReview gameReview = gameReviewRepository.findById(reviewId).orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME_REVIEW));
+        GameReview gameReview = gameReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME_REVIEW));
         // 3. 토글 검증 (이미 유저가 좋아요를 했다면 좋아요를 취소 시켜준다.)
         Optional<GameReviewLike> reviewLike = likeRepository.findByUserAndGameReview(user, gameReview);
 
         // 이미 좋아요를 눌렀다면 좋아요 취소, 좋아요 감소 / 안 눌렀다면 좋아요, 좋아요 증가
-        boolean isLike;
-        if(reviewLike.isPresent()) {
-            likeRepository.delete(reviewLike.get());
-            isLike = false;
-        } else {
-            GameReviewLike newLike = GameReviewLike.builder()
-                    .user(user)
-                    .gameReview(gameReview)
-                    .build();
-            likeRepository.save(newLike);
-            isLike = true;
+        boolean isLike = false;
+
+        if (toggleLike) { // 좋아요 추가
+            if (reviewLike.isEmpty()) {
+                GameReviewLike newLike = GameReviewLike.builder()
+                        .user(user)
+                        .gameReview(gameReview)
+                        .build();
+                likeRepository.save(newLike);
+                isLike = true;
+            }
+        } else { // 좋아요 취소
+            reviewLike.ifPresent(likeRepository::delete);
         }
 
         // 좋아요 개수 조회

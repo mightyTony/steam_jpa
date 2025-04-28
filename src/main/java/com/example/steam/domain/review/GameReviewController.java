@@ -109,7 +109,8 @@ public class GameReviewController {
     public Response<GameReviewLikeResponse> toggleReviewLike(@AuthenticationPrincipal User user,
                                                              @PathVariable("gameId") Long gameId,
                                                              @PathVariable("reviewId") Long reviewId,
-                                                             @Parameter(name = "좋아요 버튼", description = "true = 좋아요/ false = 취소")@RequestParam("toggle") boolean toggleLike) {
+                                                             @Parameter(name = "toggle", description = "true = 좋아요/ false = 취소")
+                                                                 @RequestParam("toggle") boolean toggleLike) {
         GameReviewLikeResponse response = reviewService.toggleReviewLike(user, gameId, reviewId, toggleLike);
 
         return Response.success(response);

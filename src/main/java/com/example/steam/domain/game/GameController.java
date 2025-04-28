@@ -7,6 +7,7 @@ import com.example.steam.util.annotation.AdminAuthorize;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
@@ -38,12 +39,11 @@ public class GameController {
 
     @Operation(summary = "게임 등록", description = "관리자가 게임을 등록합니다. JSON 데이터 + 이미지 파일 업로드 필요")
     @AdminAuthorize
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, "multipart/form-data"})
+    @PostMapping()
     public Response<GameDetailResponse> createGame(
-            @RequestPart("data") GameCreateRequest requestDto,
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile,
-            @AuthenticationPrincipal User user) throws IOException {
-        Game game = gameService.createGame(requestDto,imageFile);
+                                        @RequestBody GameCreateRequest requestDto,
+                                        @AuthenticationPrincipal User user) {
+        Game game = gameService.createGame(requestDto);
 
         GameDetailResponse response = new GameDetailResponse(game);
 
@@ -122,9 +122,14 @@ public class GameController {
     }
 
     @Operation(summary = "게임 이미지 수정", description = "게임 이미지 파일을 업로드하여 수정합니다.")
-    @PutMapping("{gameId}/edit/image")
+    @PutMapping(value = "{gameId}/edit/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @AdminAuthorize
     public Response<String> editGamePicture(@PathVariable("gameId") Long gameId,
+                                            @Parameter(
+                                                    description = "업로드할 이미지 파일",
+                                                    content = @Content(mediaType = "multipart/form-data",
+                                                            schema = @Schema(type = "string", format = "binary"))
+                                            )
                                             @NotNull @RequestParam("image") MultipartFile imageFile,
                                             @AuthenticationPrincipal User user) throws IOException {
         String imageUrl = gameService.editGamePicture(gameId, imageFile);
