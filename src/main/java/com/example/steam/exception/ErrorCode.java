@@ -58,7 +58,11 @@ public enum ErrorCode {
     NOT_FOUND_IMAGE_FILE(HttpStatus.BAD_REQUEST, "이미지 파일이 없습니다." ),
     UPLOAD_FAIL(HttpStatus.CONFLICT,"S3 업로드 실패" ),
     ILLEGAL_ARGUMENT_MULTIPARTFILE(HttpStatus.BAD_REQUEST, "이미지 파일 에러" ),
-    IMAGE_CONVERT_FAIL(HttpStatus.CONFLICT, "이미지 변환 실패" );
+    IMAGE_CONVERT_FAIL(HttpStatus.CONFLICT, "이미지 변환 실패" ),
+
+    // WISH
+    ALREADY_IN_WISH(HttpStatus.BAD_REQUEST,"이미 찜 목록에 있습니다" ),
+    NOT_FOUND_WISH(HttpStatus.BAD_REQUEST, "찜 목록에 없습니다" );
 
 
 
