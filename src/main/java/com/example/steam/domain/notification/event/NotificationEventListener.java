@@ -30,13 +30,13 @@ public class NotificationEventListener {
 
     // 댓글 알람
     @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleCommentAlarm(CommentWriteEvent event) {
         User receiver = event.getProfile().getUser();
         User writer = event.getWriter();
 
         if(!receiver.equals(writer)) {
-
             Notification notification = Notification.notify(
                     receiver.getId(),
                     NotiType.PROFILE_COMMENT,
@@ -78,6 +78,5 @@ public class NotificationEventListener {
         }
 
         sseService.sendNotifications(notifications);
-
     }
 }

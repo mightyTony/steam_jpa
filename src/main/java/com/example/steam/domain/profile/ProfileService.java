@@ -121,33 +121,9 @@ public class ProfileService {
         commentRepository.save(comment);
 
         // 알림 이벤트 생성
-//        postCommentNotification(writer, profile);
         eventPublisher.publishEvent(new CommentWriteEvent(writer, profile));
 
-
-
         return CommentResponse.toDto(comment);
-    }
-
-    private void postCommentNotification(User writer, Profile profile){
-        if(!profile.getUser().equals(writer)) {
-//            Notification notification = Notification.builder()
-//                    .user(profile.getUser())
-//                    .title("내 프로필에 댓글이 달렸어요")
-//                    .message(writer.getNickname() + "님이 프로필에 댓글을 남겼습니다. ")
-//                    .type(NotiType.PROFILE_COMMENT)
-//                    .build();
-            Notification notification = Notification.notify(
-                    writer.getId(),
-                    NotiType.PROFILE_COMMENT,
-                    "내 프로필에 댓글이 달렸어요",
-                    writer.getNickname() + "님이 프로필에 댓글을 남겼습니다.",
-                    false,
-                    LocalDateTime.now().toString()
-            );
-
-            notificationRepository.save(notification);
-        }
     }
 
     // 프로필 내 댓글 삭제
