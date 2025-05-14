@@ -1,5 +1,9 @@
 package com.example.steam.domain.profile;
 
+import com.example.steam.domain.notification.Notification;
+import com.example.steam.domain.notification.event.CommentWriteEvent;
+import com.example.steam.domain.notification.model.NotiType;
+import com.example.steam.domain.notification.query.NotificationRepository;
 import com.example.steam.domain.profile.comment.Comment;
 import com.example.steam.domain.profile.dto.*;
 import com.example.steam.domain.profile.query.MyGameRepository;
@@ -13,6 +17,7 @@ import com.example.steam.exception.SteamException;
 import com.example.steam.infra.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +39,8 @@ public class ProfileService {
     private final UserService userService;
     private final S3Util s3Util;
     private final MyGameRepository myGameRepository;
+    private final NotificationRepository notificationRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private final String S3_USER_DIRNAME = "image/user";
 
     @Transactional(readOnly = true)
@@ -112,7 +120,34 @@ public class ProfileService {
 
         commentRepository.save(comment);
 
+        // 알림 이벤트 생성
+//        postCommentNotification(writer, profile);
+        eventPublisher.publishEvent(new CommentWriteEvent(writer, profile));
+
+
+
         return CommentResponse.toDto(comment);
+    }
+
+    private void postCommentNotification(User writer, Profile profile){
+        if(!profile.getUser().equals(writer)) {
+//            Notification notification = Notification.builder()
+//                    .user(profile.getUser())
+//                    .title("내 프로필에 댓글이 달렸어요")
+//                    .message(writer.getNickname() + "님이 프로필에 댓글을 남겼습니다. ")
+//                    .type(NotiType.PROFILE_COMMENT)
+//                    .build();
+            Notification notification = Notification.notify(
+                    writer.getId(),
+                    NotiType.PROFILE_COMMENT,
+                    "내 프로필에 댓글이 달렸어요",
+                    writer.getNickname() + "님이 프로필에 댓글을 남겼습니다.",
+                    false,
+                    LocalDateTime.now().toString()
+            );
+
+            notificationRepository.save(notification);
+        }
     }
 
     // 프로필 내 댓글 삭제
@@ -138,12 +173,7 @@ public class ProfileService {
     }
 
     public Page<CommentResponse> getComments(Long profileId, int page, int size, Pageable pageable) {
-
-
         Page<CommentResponse> result = commentRepository.findCommentsWithPaging(page,size,pageable, profileId);
-
-//        log.info("result : {} ", result);
-
 
         if (result.isEmpty()) {
             throw new SteamException(ErrorCode.NOT_FOUND_COMMENT);

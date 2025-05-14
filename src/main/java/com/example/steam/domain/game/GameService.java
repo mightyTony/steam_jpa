@@ -4,12 +4,14 @@ import com.example.steam.domain.game.dto.*;
 import com.example.steam.domain.game.genre.GameGenre;
 import com.example.steam.domain.game.genre.GameGenreRepository;
 import com.example.steam.domain.game.query.GameRepository;
+import com.example.steam.domain.notification.event.GameSaleEvent;
 import com.example.steam.domain.user.User;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import com.example.steam.infra.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,6 +37,7 @@ public class GameService {
     private final S3Util s3Util;
     private final RedisTemplate<String, Object> redisTemplate;
     private final String S3_GAME_DIRNAME = "image/game";
+    private final ApplicationEventPublisher eventPublisher;
 
     // 게임 등록
     @Transactional
@@ -106,6 +109,7 @@ public class GameService {
     }
 
     // 할인 적용
+    @Transactional
     public GameDetailResponse applyDiscount(Long id, GameDiscountRequest discountDto, @AuthenticationPrincipal User user) {
         // 1. 조회
         Game game = gameRepository.findById(id)
@@ -118,6 +122,9 @@ public class GameService {
         Game saved = gameRepository.save(game);
 
         log.info("[게임][어드민] 할인 적용 되었습니다. {} / by {}", game.getName(), user.getUsername());
+
+        // 4. 할인 메시지 전송
+        eventPublisher.publishEvent(new GameSaleEvent(game));
 
         return new GameDetailResponse(saved);
     }

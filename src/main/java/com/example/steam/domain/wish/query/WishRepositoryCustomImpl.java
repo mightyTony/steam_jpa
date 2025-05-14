@@ -1,5 +1,6 @@
 package com.example.steam.domain.wish.query;
 
+import com.example.steam.domain.game.Game;
 import com.example.steam.domain.game.QGame;
 import com.example.steam.domain.user.QUser;
 import com.example.steam.domain.user.User;
@@ -50,5 +51,16 @@ public class WishRepositoryCustomImpl implements WishRepositoryCustom {
                 .where(wish.user.id.eq(userId))
                 .fetch();
 
+    }
+
+    @Override
+    public List<Long> findUsersByGame(Game Ggame) {
+        List<Long> results = queryFactory.select(wish.user.id)
+                .from(wish)
+                .join(wish.game, game)
+                .where(wish.game.eq(Ggame))
+                .fetch();
+
+        return results;
     }
 }
