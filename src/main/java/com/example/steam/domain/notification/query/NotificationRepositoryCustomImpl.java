@@ -3,25 +3,28 @@ package com.example.steam.domain.notification.query;
 import com.example.steam.domain.notification.QNotification;
 import com.example.steam.domain.notification.dto.NotificationDto;
 import com.example.steam.domain.notification.dto.QNotificationDto;
+import com.example.steam.domain.user.QUser;
 import com.example.steam.domain.user.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class NotificationRepositoryCustomImpl implements NotificationRepositoryCustom {
-    private JPAQueryFactory queryFactory;
-
-//    private final QUser qUser = QUser.user;
+    private final JPAQueryFactory queryFactory;
+    private final QUser qUser = QUser.user;
     private final QNotification notification = QNotification.notification;
+
     @Override
     public Long countUnreadNotification(User user) {
         return queryFactory
                 .select(notification.count())
                 .from(notification)
                 .where(
-                        notification.user.eq(user),
+                        notification.userId.eq(user.getId()),
                         notification.isRead.isFalse()
                 )
                 .fetchOne();
@@ -38,7 +41,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                         notification.createdAt
                 ))
                 .from(notification)
-                .where( notification.user.eq(user),
+                .where( notification.userId.eq(user.getId()),
                         notification.isRead.isFalse()
                 )
                 .fetch();

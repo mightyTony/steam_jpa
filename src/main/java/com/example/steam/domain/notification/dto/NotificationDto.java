@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class NotificationDto {
-    private Long id;
-    private String title;
-    private String message;
-    private boolean isRead;
-    private String createdAt;
+    private final Long id;
+    private final String title;
+    private final String message;
+    private final boolean isRead;
+    private final String createdAt;
 
     @QueryProjection
     public NotificationDto(Long id, String title, String message, boolean isRead, String createdAt) {

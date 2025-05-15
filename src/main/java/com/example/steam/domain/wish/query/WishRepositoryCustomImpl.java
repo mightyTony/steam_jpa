@@ -5,7 +5,6 @@ import com.example.steam.domain.game.QGame;
 import com.example.steam.domain.user.QUser;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.wish.QWish;
-import com.example.steam.domain.wish.Wish;
 import com.example.steam.domain.wish.dto.QWishDto;
 import com.example.steam.domain.wish.dto.WishDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,7 +18,7 @@ import java.util.List;
 public class WishRepositoryCustomImpl implements WishRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final QWish wish = QWish.wish;
-    private final QUser user = QUser.user;
+//    private final QUser user = QUser.user;
     private final QGame game = QGame.game;
 
     @Override
@@ -55,12 +54,11 @@ public class WishRepositoryCustomImpl implements WishRepositoryCustom {
 
     @Override
     public List<Long> findUsersByGame(Game Ggame) {
-        List<Long> results = queryFactory.select(wish.user.id)
+
+        return queryFactory.select(wish.user.id)
                 .from(wish)
                 .join(wish.game, game)
                 .where(wish.game.eq(Ggame))
                 .fetch();
-
-        return results;
     }
 }

@@ -12,9 +12,8 @@ import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +28,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ProfileRepository profileRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
     public UserJoinResponse join(UserJoinRequest request) {
         // 이미 가입된 아이디인지
-//        if(authRepository.findByUsername(request.getUsername()).isPresent()) {
-//           throw new SteamException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s 는 중복된 이름 입니다.", request.getUsername()));
-//        }
         if(authRepository.findByUsernameOrEmail(request.getUsername(), request.getEmail()).isPresent()){
             throw new SteamException(ErrorCode.DUPLICATED_USER_NAME_OR_EMAIL);
         }
@@ -69,10 +64,6 @@ public class AuthService {
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new SteamException(ErrorCode.INVALID_PASSWORD);
         }
-
-//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
-//
-//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 

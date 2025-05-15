@@ -1,13 +1,11 @@
 package com.example.steam.domain.profile;
 
-import com.example.steam.domain.notification.Notification;
 import com.example.steam.domain.notification.event.CommentWriteEvent;
-import com.example.steam.domain.notification.model.NotiType;
 import com.example.steam.domain.notification.query.NotificationRepository;
 import com.example.steam.domain.profile.comment.Comment;
 import com.example.steam.domain.profile.dto.*;
-import com.example.steam.domain.profile.query.MyGameRepository;
 import com.example.steam.domain.profile.query.CommentRepository;
+import com.example.steam.domain.profile.query.MyGameRepository;
 import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;
@@ -25,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 

@@ -1,11 +1,8 @@
 package com.example.steam.domain.notification;
 
 import com.example.steam.domain.notification.model.NotiType;
-import com.example.steam.domain.user.User;
 import jakarta.persistence.*;
-import kotlin.internal.NoInfer;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +17,7 @@ public class Notification {
     private Long id;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     private String title;
