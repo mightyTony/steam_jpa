@@ -19,13 +19,13 @@
         <!-- 디스코드 웹훅 설정 -->
         <springProperty name="DISCORD_WEBHOOK_URL" source="logging.discord.webhook-url"/>
         <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
-            <filter class="ch.qos.logback.classic.filter.EvaluatorFilter">
-                <evaluator>
-                    <expression>return message.contains("[LOG]");</expression>
-                </evaluator>
-                <OnMismatch>DENY</OnMismatch>
-                <OnMatch>NEUTRAL</OnMatch>
-            </filter>
+<!--            <filter class="ch.qos.logback.classic.filter.EvaluatorFilter">-->
+<!--                <evaluator>-->
+<!--                    <expression>return message.contains("[LOG]");</expression>-->
+<!--                </evaluator>-->
+<!--                <OnMismatch>DENY</OnMismatch>-->
+<!--                <OnMatch>NEUTRAL</OnMatch>-->
+<!--            </filter>-->
             <webhookUri>${DISCORD_WEBHOOK_URL}</webhookUri>
             <layout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%d{HH:mm:ss} [%thread] [%-5level] %logger{36} - %msg%n```%ex{full}```</pattern>
