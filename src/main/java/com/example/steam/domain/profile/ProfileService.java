@@ -36,7 +36,6 @@ public class ProfileService {
     private final UserService userService;
     private final S3Util s3Util;
     private final MyGameRepository myGameRepository;
-    private final NotificationRepository notificationRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final String S3_USER_DIRNAME = "image/user";
 

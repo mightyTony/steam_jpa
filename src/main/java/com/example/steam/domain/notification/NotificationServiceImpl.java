@@ -9,7 +9,6 @@ import com.example.steam.domain.user.User;
 import com.example.steam.domain.wish.query.WishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

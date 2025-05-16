@@ -3,7 +3,6 @@ package com.example.steam.domain.notification.query;
 import com.example.steam.domain.notification.QNotification;
 import com.example.steam.domain.notification.dto.NotificationDto;
 import com.example.steam.domain.notification.dto.QNotificationDto;
-import com.example.steam.domain.user.QUser;
 import com.example.steam.domain.user.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
