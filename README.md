@@ -56,3 +56,10 @@ Java, Spring, Spring Data JPA, Spring Security, QueryDSL, JWT, MySQL, Docker, Re
 | Game     | /api/v1/game/weekly                                        | GET         | 주간 게임 판매 랭킹             | -          | X           |
 | Game     | /api/v1/game/monthly                                       | GET         | 월간 게임 판매 랭킹             | -          | X           |
 | Game     | /api/v1/game/category                                      | GET         | 게임 목록 조회                  | -          | X           |
+| Notification | /api/v1/notifications/subscribe        | GET         | 알림 서비스 구독             | USER       | O          |
+| Notification | /api/v1/notifications/latest           | GET         | 최근 받은 알림 10개를 조회   | USER       | O          |
+| Notification | /api/v1/notifications/count            | GET         | 안 읽은 알림 개수 조회       | USER       | O          |
+| Wish   | /api/v1/wish                     | POST        | 상품을 찜 목록에 등록합니다.     | USER       | O          |
+| Wish   | /api/v1/wish                     | DELETE      | 해당 상품을 찜 목록에서 삭제합니다. | USER       | O          |
+| Wish   | /api/v1/wish/move/{game}         | PATCH       | 찜한 상품을 장바구니로 옮깁니다.   | USER       | O          |
+| Wish   | /api/v1/wish/user/{userId}       | GET         | 찜 목록 조회                      | USER       | O          |
