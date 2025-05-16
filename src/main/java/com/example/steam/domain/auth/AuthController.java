@@ -27,7 +27,7 @@ public class AuthController {
     @PostMapping("/signup")
     public Response<UserJoinResponse> join(@Valid @RequestBody UserJoinRequest request) {
         UserJoinResponse response = authService.join(request);
-
+        log.info("[LOG 새 회원가입 - userId : {} ", response.getUsername());
         return Response.success(response);
     }
 
