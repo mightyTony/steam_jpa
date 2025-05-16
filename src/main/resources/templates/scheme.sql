@@ -265,3 +265,5 @@ CREATE INDEX idx_order_item_game_id ON order_item (game_id);
 #cart
 #CREATE UNIQUE INDEX idx_cart_user_game ON cart (user_id, game_id);
 
+#notification
+CREATE INDEX idx_notification_user_id_read ON notification (user_id, is_read);
