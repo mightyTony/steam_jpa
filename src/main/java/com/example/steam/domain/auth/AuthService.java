@@ -4,7 +4,6 @@ import com.example.steam.config.jwt.JwtTokenProvider;
 import com.example.steam.domain.auth.dto.UserJoinRequest;
 import com.example.steam.domain.auth.dto.UserJoinResponse;
 import com.example.steam.domain.notification.event.UserJoinEvent;
-import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.Role;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;

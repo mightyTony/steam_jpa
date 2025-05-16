@@ -1,7 +1,6 @@
 package com.example.steam.domain.profile;
 
 import com.example.steam.domain.notification.event.CommentWriteEvent;
-import com.example.steam.domain.notification.query.NotificationRepository;
 import com.example.steam.domain.profile.comment.Comment;
 import com.example.steam.domain.profile.dto.*;
 import com.example.steam.domain.profile.query.CommentRepository;
