@@ -27,7 +27,7 @@ public class NotificationEventListener {
     // 게임 세일 알람
     @TransactionalEventListener
     public void handleSaleAlarm(GameSaleEvent event) {
-        log.info("[게임 할인 이벤트 알람 - {}", event.getGame().getName());
+        log.info("[LOG] [게임 할인 이벤트 알람 - {}", event.getGame().getName());
         notificationService.sendSaleNotifications(event.getGame());
     }
 
@@ -46,7 +46,7 @@ public class NotificationEventListener {
     // 친구 요청 알람
     @TransactionalEventListener
     public void handleFriendAlarm(FriendEventNotification eventNotification) {
-        log.info("[친구 요청 알람] 보낸이 : {}, 받는 이 : {}", eventNotification.getUser().getNickname(), eventNotification.getReceiver().getNickname());
+        log.info("[LOG] [친구 요청 알람] 보낸이 : {}, 받는 이 : {}", eventNotification.getUser().getNickname(), eventNotification.getReceiver().getNickname());
         notificationService.sendFriendNotifications(eventNotification.getReceiver(), eventNotification.getUser());
     }
 }

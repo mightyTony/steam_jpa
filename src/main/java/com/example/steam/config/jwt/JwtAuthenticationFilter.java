@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return hm;
             }
         } catch (Exception e) {
-            log.warn("HandlerMethod 추출 실패: {}", e.getMessage());
+            log.warn("[LOG] HandlerMethod 추출 실패: {}", e.getMessage());
         }
         return null;
     }

@@ -105,7 +105,7 @@ public class GameReviewService {
         // 리뷰 삭제(soft)
         review.delete();
 
-        log.info("[리뷰 삭제] 리뷰가 삭제 되었습니다. 리뷰 게임 : {} / 리뷰 아이디 : {}", review.getGame().getName(), review.getId());
+        log.info("[LOG] [리뷰 삭제] 리뷰가 삭제 되었습니다. 리뷰 게임 : {} / 리뷰 아이디 : {}", review.getGame().getName(), review.getId());
 
         gameReviewRepository.save(review);
     }

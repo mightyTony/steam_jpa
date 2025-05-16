@@ -47,7 +47,7 @@ public class GameController {
 
         GameDetailResponse response = new GameDetailResponse(game);
 
-        log.info("[게임][어드민] 게임이 등록 되었습니다 : {}, 등록 한 유저 :{}", response.getName(), user.getUsername());
+        log.info("[LOG] [게임][어드민] 게임이 등록 되었습니다 : {}, 등록 한 유저 :{}", response.getName(), user.getUsername());
         return  Response.success(response);
     }
 
@@ -89,7 +89,7 @@ public class GameController {
     @PatchMapping("/{id}/info")
     public Response<GameUpdateResponse> updateGameInfo(@PathVariable("id") Long id, @RequestBody GameUpdateRequest request, @AuthenticationPrincipal User user) {
         GameUpdateResponse response = gameService.updateGame(id, request);
-        log.info("[게임][어드민] 게임 정보 수정 - {} / by {}", response.getName(), user.getUsername());
+        log.info("[LOG] [게임][어드민] 게임 정보 수정 - {} / by {}", response.getName(), user.getUsername());
         return Response.success(response);
     }
 
@@ -109,7 +109,6 @@ public class GameController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        log.info("[게임 목록 조회]");
         Page<GameDetailResponse> result = gameService.getGamesByCategory(
                 category,
                 name,

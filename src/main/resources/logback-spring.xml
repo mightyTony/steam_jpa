@@ -19,6 +19,13 @@
         <!-- 디스코드 웹훅 설정 -->
         <springProperty name="DISCORD_WEBHOOK_URL" source="logging.discord.webhook-url"/>
         <appender name="DISCORD" class="com.github.napstr.logback.DiscordAppender">
+            <filter class="ch.qos.logback.classic.filter.EvaluatorFilter">
+                <evaluator>
+                    <expression>return message.contains("[LOG]");</expression>
+                </evaluator>
+                <OnMismatch>DENY</OnMismatch>
+                <OnMatch>NEUTRAL</OnMatch>
+            </filter>
             <webhookUri>${DISCORD_WEBHOOK_URL}</webhookUri>
             <layout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%d{HH:mm:ss} [%thread] [%-5level] %logger{36} - %msg%n```%ex{full}```</pattern>
@@ -34,44 +41,6 @@
                 <level>INFO</level>
             </filter>
         </appender>
-
-<!--        &lt;!&ndash; AWS CloudWatch 로그 설정 (prod) &ndash;&gt;-->
-<!--        <springProperty name="AWS_ACCESS_KEY" source="cloud.aws.credentials.access-key"/>-->
-<!--        <springProperty name="AWS_SECRET_KEY" source="cloud.aws.credentials.secret-key"/>-->
-<!--        <appender name="aws_cloud_watch_log" class="ca.pjer.logback.AwsLogsAppender">-->
-<!--            &lt;!&ndash; ERROR 이상의 로그만 전송 &ndash;&gt;-->
-<!--            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-<!--                <level>ERROR</level>-->
-<!--            </filter>-->
-<!--            <layout>-->
-<!--                <pattern>[%thread] [%date] [%level] [%file:%line] - %msg%n</pattern>-->
-<!--            </layout>-->
-<!--            <logGroupName>aws-error-log-prod/error-log</logGroupName>-->
-<!--            <logStreamUuidPrefix>error-log-prod-</logStreamUuidPrefix>-->
-<!--            <logRegion>ap-northeast-2</logRegion>-->
-<!--            <maxBatchLogEvents>50</maxBatchLogEvents>-->
-<!--            <maxFlushTimeMillis>30000</maxFlushTimeMillis>-->
-<!--            <maxBlockTimeMillis>5000</maxBlockTimeMillis>-->
-<!--            <retentionTimeDays>0</retentionTimeDays>-->
-<!--            <accessKeyId>${AWS_ACCESS_KEY}</accessKeyId>-->
-<!--            <secretAccessKey>${AWS_SECRET_KEY}</secretAccessKey>-->
-<!--            <encoder>-->
-<!--                <charset>UTF-8</charset>-->
-<!--                <pattern>%d{HH:mm:ss.SSS} [%thread] [%5level] %logger{35}[%method:%line] %m%n</pattern>-->
-<!--            </encoder>-->
-<!--        </appender>-->
-
-<!--        &lt;!&ndash; 에러 로거 (prod에서만 CloudWatch로 전송) &ndash;&gt;-->
-<!--        <logger name="errorLogger" level="error" additivity="false">-->
-<!--            <appender-ref ref="aws_cloud_watch_log" />-->
-<!--        </logger>-->
-
-<!--        &lt;!&ndash; prod 환경에서만 DISCORD와 AWS CloudWatch 로그 전송 &ndash;&gt;-->
-<!--        <root level="INFO">-->
-<!--            <appender-ref ref="CONSOLE" />-->
-<!--            <appender-ref ref="ASYNC_DISCORD" />-->
-<!--            <appender-ref ref="aws_cloud_watch_log" />-->
-<!--        </root>-->
 
         <!-- 루트 로거: INFO 이상 콘솔, ERROR 이상 디스코드로만 보냄 -->
         <root level="INFO">

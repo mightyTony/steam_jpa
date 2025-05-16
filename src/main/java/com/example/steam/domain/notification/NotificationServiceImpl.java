@@ -57,7 +57,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         notificationRepository.saveAll(notifications);
         notificationRepository.flush();
-        log.info("[게임 할인 이벤트 알람 저장: {}건]", notifications.size());
+        log.info("[LOG] [게임 할인 이벤트 알람 저장: {}건]", notifications.size());
 
         sseService.sendNotifications(notifications);
     }

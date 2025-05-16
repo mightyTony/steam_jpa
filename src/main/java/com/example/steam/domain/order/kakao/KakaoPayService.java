@@ -207,9 +207,9 @@ public class KakaoPayService implements OrderService {
 
         // 결제 실패시
         if (responseEntity.getStatusCode().is4xxClientError() || responseEntity.getStatusCode().is5xxServerError()) {
-            log.warn("[approvePayment] KakaoPayApproval failed");
-            log.warn("[approvePayment] KakaoPayApproval failed - status : {}", responseEntity.getStatusCode());
-            log.warn("[approvePayment] KakaoPayApproval failed - getBody : {}", responseEntity.getBody());
+            log.warn("[LOG] [approvePayment] KakaoPayApproval failed");
+            log.warn("[LOG] [approvePayment] KakaoPayApproval failed - status : {}", responseEntity.getStatusCode());
+            log.warn("[LOG] [approvePayment] KakaoPayApproval failed - getBody : {}", responseEntity.getBody());
             order.failed();
             orderRepository.save(order);
             throw new SteamException(ErrorCode.ORDER_FAILED);
@@ -251,7 +251,7 @@ public class KakaoPayService implements OrderService {
         order.cancel();
         orderRepository.save(order);
 
-        log.info("[결제 취소] - orderId : {}", order.getId());
+        log.info("[LOG] [결제 취소] - orderId : {}", order.getId());
     }
 
     @Override
@@ -261,7 +261,7 @@ public class KakaoPayService implements OrderService {
                 .orElseThrow(() -> new SteamException(ErrorCode.ORDER_NOT_FOUND));
 
         order.failed();
-        log.warn("[결제 실패] - orderId : {}", order.getId());
+        log.warn("[LOG] [결제 실패] - orderId : {}", order.getId());
         orderRepository.save(order);
     }
 
@@ -269,8 +269,6 @@ public class KakaoPayService implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderHistoryResponse> getOrderHistory(User user) {
-//        List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user);
-        log.info("getOrderHistory() call");
         List<Order> orders = orderRepository.findOrdersWithItemsByUser(user);
 
         List<OrderHistoryResponse> historyList = new ArrayList<>();

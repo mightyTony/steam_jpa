@@ -76,7 +76,6 @@ public class GameService {
     }
 
     private void addGenresToGame(Game game, List<String> genres) {
-        log.info("[addGenresToGame]");
         List<GameGenre> genreList = new ArrayList<>();
         for(String genreName : genres) {
             GameGenre gameGenre = GameGenre.builder()
@@ -105,7 +104,7 @@ public class GameService {
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
 
         gameRepository.deleteById(id);
-        log.info("[게임][어드민] 게임이 삭제 되었습니다. 게임 명 - {}, 삭제 한 유저 : {}", game.getName(), user.getUsername());
+        log.info("[LOG] [게임][어드민] 게임이 삭제 되었습니다. 게임 명 - {}, 삭제 한 유저 : {}", game.getName(), user.getUsername());
     }
 
     // 할인 적용
@@ -121,7 +120,7 @@ public class GameService {
         // 3. 정보 업데이트
         Game saved = gameRepository.save(game);
 
-        log.info("[게임][어드민] 할인 적용 되었습니다. {} / by {}", game.getName(), user.getUsername());
+        log.info("[LOG] [게임][어드민] 할인 적용 되었습니다. {} / by {}", game.getName(), user.getUsername());
 
         // 4. 할인 메시지 전송
         eventPublisher.publishEvent(new GameSaleEvent(game));
@@ -137,7 +136,7 @@ public class GameService {
 
         gameRepository.save(game);
 
-        log.info("[게임][어드민] 게임이 릴리즈 되었습니다. {} / by {}", game.getName(), user.getUsername());
+        log.info("[LOG] [게임][어드민] 게임이 릴리즈 되었습니다. {} / by {}", game.getName(), user.getUsername());
     }
 
     // 게임 정보 수정
@@ -179,7 +178,7 @@ public class GameService {
         game.uploadImage(imageCloudFrontUrl);
         gameRepository.save(game);
 
-        log.info("[게임 이미지 변경] gameId : {}, uploadImageUrl : {}", game.getId(), game.getPictureUrl());
+        log.info("[LOG] [게임 이미지 변경] gameId : {}, uploadImageUrl : {}", game.getId(), game.getPictureUrl());
 
         return game.getPictureUrl();
     }
@@ -188,16 +187,16 @@ public class GameService {
         Object cachedData = redisTemplate.opsForValue().get(redisKey);
 
         if(cachedData != null) {
-            log.info("[캐시 히트] 게임 랭킹 데이터 key: {}", redisKey);
+            log.info("[LOG] [캐시 히트] 게임 랭킹 데이터 key: {}", redisKey);
             return (List<GameRankingResponse>)cachedData;
         }
 
-        log.warn("[CACHE MISS] key: {} - DB 조회 후 캐싱 시도", redisKey);
+        log.warn("[LOG] [CACHE MISS] key: {} - DB 조회 후 캐싱 시도", redisKey);
         List<GameRankingResponse> result = gameRepository.findTopGamesBySales(fromDate);
 
         // 캐싱
         redisTemplate.opsForValue().set(redisKey, result, redisTTL);
-        log.info("[CACHE PUT] key: {}, TTL: {} days, size: {}", redisKey, redisTTL.toDays(), result.size());
+        log.info("[LOG] [CACHE PUT] key: {}, TTL: {} days, size: {}", redisKey, redisTTL.toDays(), result.size());
 
         return result;
     }

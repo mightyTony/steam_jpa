@@ -22,23 +22,23 @@ public class GameScheduler {
     // 주간 랭킹 - 매주 월요일 오전 3시 실행
     @Scheduled(cron = "0 0 3 * * MON", zone = "Asia/Seoul")
     public void updateWeeklyGameRanking() {
-        log.info("[스케줄러] - 주간 게임 판매량 랭킹 캐싱");
+        log.info("[LOG] [스케줄러] - 주간 게임 판매량 랭킹 캐싱");
         List<GameRankingResponse> result = gameRepository.findTopGamesBySales(LocalDateTime.now().minusWeeks(1));
 
         // 레디스 저장
         redisTemplate.opsForValue().set("game:ranking:weekly", result, Duration.ofDays(7));
-        log.info("[스케줄러] - 주간 게임 판매량 랭킹 캐싱 완료 ({}개)", result.size());
+        log.info("[LOG] [스케줄러] - 주간 게임 판매량 랭킹 캐싱 완료 ({}개)", result.size());
     }
 
     // 월간 랭킹 - 매월 1일 오전 3시 실행
     @Scheduled(cron = "0 0 3 1 * *", zone = "Asia/Seoul")
     public void updateMonthlyGameRanking() {
-        log.info("[스케줄러] - 월간 게임 판매량 랭킹 캐");
+        log.info("[LOG] [스케줄러] - 월간 게임 판매량 랭킹 캐");
         List<GameRankingResponse> result = gameRepository.findTopGamesBySales(LocalDateTime.now().minusMonths(1));
 
         // 레디스 저장
         redisTemplate.opsForValue().set("game:ranking:monthly", result, Duration.ofDays(31));
-        log.info("[스케줄러] - 월간 게임 판매량 랭킹 캐싱 완료 ({}개)", result.size());
+        log.info("[LOG] [스케줄러] - 월간 게임 판매량 랭킹 캐싱 완료 ({}개)", result.size());
     }
 
 //    @Scheduled(cron = "5 * * * * *", zone = "Asia/Seoul")

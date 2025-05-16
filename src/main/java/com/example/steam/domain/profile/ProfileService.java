@@ -42,11 +42,8 @@ public class ProfileService {
     public ProfileResponse getProfileInfo(Long userId) {
         // 유저 검증
         userService.isExistedBoolean(userId);
-        log.info("[프로필 정보 쿼리]");
         // 프로필 정보
         return profileRepository.findByUserId(userId);
-
-
     }
 
     @Transactional
@@ -71,7 +68,7 @@ public class ProfileService {
         user.updateImage(imageCloudFrontUrl);
         userRepository.save(user);
 
-        log.info("[유저 이미지 변경] userId : {}, uploadImageUrl : {}", user.getId(), user.getProfileImageUrl());
+        log.info("[LOG] [유저 이미지 변경] userId : {}, uploadImageUrl : {}", user.getId(), user.getProfileImageUrl());
 
         return user.getProfileImageUrl();
     }
@@ -82,7 +79,7 @@ public class ProfileService {
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
 
         // 유저 본인 검증
-        log.info("findUser.getId : {}, user.getId() : {}, equals : {},", findUser.getId(), user.getId(), findUser.getId().equals(user.getId()));
+//        log.info("findUser.getId : {}, user.getId() : {}, equals : {},", findUser.getId(), user.getId(), findUser.getId().equals(user.getId()));
         if(!findUser.getId().equals(user.getId())) {
             throw new SteamException(ErrorCode.UNAUTHORIZED);
         }
@@ -131,9 +128,7 @@ public class ProfileService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_COMMENT));
 
-        log.info("user : {}", user);
-        log.info("profile.getUser() : {}", profile.getUser());
-        log.info("comment.getWriter() :  {}", comment.getWriter());
+        log.info("[LOG] [프로필 내 댓글 삭제] 삭제 댓글 작성자: {}, 댓글 내용 : {}", comment.getWriter(), comment.getContent());
 
         if(user.equals(profile.getUser())  || user.equals(comment.getWriter())) {
             commentRepository.deleteById(commentId);

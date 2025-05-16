@@ -40,7 +40,7 @@ public class GameReviewController {
             @Valid @RequestBody GameReviewCreateRequest request) {
 
         GameReviewCreateResponse response = reviewService.postReview(gameId, user, request);
-        log.info("[게임 리뷰 작성] GameId = {}, GameReview = {}", response.getGameId(), response.getReviewId());
+        log.info("[LOG] [게임 리뷰 작성] GameId = {}, GameReview = {}", response.getGameId(), response.getReviewId());
         return Response.success(response);
     }
 
@@ -59,7 +59,7 @@ public class GameReviewController {
             @AuthenticationPrincipal User user) {
 
         GameReviewUpdateResponse response = reviewService.updateGameReview(gameId, reviewId, request, user);
-        log.info("[게임 리뷰 수정] GameId = {}, ReviewId = {}", response.getGameId(), response.getReviewId());
+        log.info("[LOG] [게임 리뷰 수정] GameId = {}, ReviewId = {}", response.getGameId(), response.getReviewId());
         return Response.success(response);
     }
 

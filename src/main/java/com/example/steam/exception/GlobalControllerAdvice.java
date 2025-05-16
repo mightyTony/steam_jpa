@@ -15,7 +15,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(SteamException.class)
     public ResponseEntity<?> applicationHandler(SteamException e) {
-        log.info("Exception occurs CODE = {}, msg = {}", e.getErrorCode(), e.getErrorCode().getMessage());
+        log.info("[LOG] Exception occurs CODE = {}, msg = {}", e.getErrorCode(), e.getErrorCode().getMessage());
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -24,7 +24,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneralException(Exception e) {
-        log.error("ERROR OCCURS {} ", "\n" + e.toString());
+        log.error("[LOG] ERROR OCCURS {} ", "\n" + e.toString());
         return ResponseEntity
                 .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
                 .contentType(MediaType.APPLICATION_JSON)

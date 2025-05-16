@@ -72,7 +72,7 @@ public class AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
 
-        log.info("[회원 탈퇴] - user : {}", user.getUsername());
+        log.info("[LOG] [회원 탈퇴] - user : {}", user.getUsername());
 
         userRepository.delete(user);
     }

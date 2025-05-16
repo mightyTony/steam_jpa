@@ -31,7 +31,8 @@ public class WishServiceImpl implements WishService {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(()-> new SteamException(ErrorCode.NOT_FOUND_GAME));
 
-        log.info("game: {}, user : {}", gameId, user.getId());
+        // log.info("game: {}, user : {}", gameId, user.getId());
+
         // 이미 찜에 있는지
         if(wishRepository.existsWishByGameIdAndUser(gameId, user)){
             throw new SteamException(ErrorCode.ALREADY_IN_WISH);
@@ -45,7 +46,7 @@ public class WishServiceImpl implements WishService {
 
         wishRepository.save(wish);
 
-        log.info("[찜 추가 - user : {}, game : {}", user.getUsername(), game.getName());
+        log.info("[LOG] [찜 추가 - user : {}, game : {}", user.getUsername(), game.getName());
     }
 
     @Override
@@ -60,7 +61,7 @@ public class WishServiceImpl implements WishService {
         // 3. 삭제
         wishRepository.delete(wish);
 
-        log.info("[찜 삭제 - user : {}, gameId : {}", user.getUsername(), game.getName());
+        log.info("[LOG] [찜 삭제 - user : {}, gameId : {}", user.getUsername(), game.getName());
     }
 
     @Override
@@ -93,7 +94,7 @@ public class WishServiceImpl implements WishService {
         cartRepository.save(cart);
         wishRepository.delete(wish);
 
-        log.info("[찜 - 장바구니 이동] - user : {}, game : {}", user.getUsername(), game.getName());
+        log.info("[LOG] [찜 - 장바구니 이동] - user : {}, game : {}", user.getUsername(), game.getName());
     }
 
 }

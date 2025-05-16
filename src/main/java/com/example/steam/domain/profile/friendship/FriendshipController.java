@@ -103,9 +103,7 @@ public class FriendshipController {
     @LoginUser
     @GetMapping("/friends")
     public Response<List<FriendshipReadResponse>> getMyFriends(@AuthenticationPrincipal User user) {
-        log.info("[내 친구 조회]");
         List<FriendshipReadResponse> responses = friendService.getMyFriends(user);
-        log.info("[내 친구 조회] - {}", responses);
         return Response.success(responses);
     }
 

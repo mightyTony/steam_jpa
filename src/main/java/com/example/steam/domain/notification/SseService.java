@@ -31,7 +31,7 @@ public class SseService {
                     .name("sse")
                     .data("연결되었습니다. EventStream Created. [userId="+userId+"]"));
         } catch (Exception e) {
-            log.warn("SSE 전송 실패: userId: {}, error: {}", userId, e.toString());
+            log.warn("[LOG] SSE 전송 실패: userId: {}, error: {}", userId, e.toString());
             emitters.remove(userId);
         }
         return emitter;
@@ -52,13 +52,13 @@ public class SseService {
     }
 
     public void sendNotifications(List<Notification> notifications) {
-        log.info("알림 전송 - 전체 대상 {} ", notifications.size());
+        log.info("[LOG] 알림 전송 - 전체 대상 {} ", notifications.size());
         for (Notification notification : notifications) {
             Long userId = notification.getUserId();
             SseEmitter emitter = emitters.get(userId);
 
             if (!emitters.containsKey(userId)) {
-                log.warn("Emitter 없음 - userId={}", userId);
+                log.warn("[LOG] Emitter 없음 - userId={}", userId);
             }
 
             if (emitter != null) {
@@ -67,7 +67,7 @@ public class SseService {
                             .name("notification")
                             .data(notification));
                 } catch (Exception e) {
-                    log.warn("SSE 전송 실패 - userId: {}, 이유: {}", userId, e.toString());
+                    log.warn("[LOG] SSE 전송 실패 - userId: {}, 이유: {}", userId, e.toString());
                     emitters.remove(userId);
                 }
             }
