@@ -36,7 +36,6 @@ public class FriendshipController {
     public Response<Void> requestFriendship(@AuthenticationPrincipal User user,
                                             @Valid @RequestBody FriendshipRequest request) {
         Friendship friendship = friendService.requestFriendship(user, request);
-        log.info("[친구 신청] response : {}", friendship);
         return Response.success();
     }
 
@@ -50,7 +49,6 @@ public class FriendshipController {
     @GetMapping("/request/received")
     public Response<List<FriendshipResponse>> getFriendshipRequest(@AuthenticationPrincipal User user) {
         List<FriendshipResponse> response = friendService.getFriendshipRequest(user);
-        log.info("[친구 요청 목록 조회] - response : {}", response);
         return Response.success(response);
     }
 

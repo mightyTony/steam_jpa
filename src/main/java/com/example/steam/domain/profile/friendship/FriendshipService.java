@@ -1,14 +1,15 @@
 package com.example.steam.domain.profile.friendship;
 
+import com.example.steam.domain.notification.event.FriendEventNotification;
 import com.example.steam.domain.profile.friendship.dto.*;
 import com.example.steam.domain.profile.friendship.query.FriendshipRepository;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.user.UserRepository;
-import com.example.steam.domain.user.UserService;
 import com.example.steam.exception.ErrorCode;
 import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,18 +23,16 @@ public class FriendshipService {
 
     private final FriendshipRepository friendRepository;
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final ApplicationEventPublisher eventPublisher;
+
     /*
     # 친구 신청
     - (대기 상태 생성), 보낸 이, 받는 이
     - 보낸 이 = 로그인 한 유저
     - 받는 이 있는 지 검증
- */
+     */
     @Transactional
     public Friendship requestFriendship(User user, FriendshipRequest request) {
-//        // 유저 검증
-//        userService.isExisted(user);
-
         // 받는 이 유저 검증
         User receiver = userRepository.findById(request.getReceiverId())
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
@@ -52,6 +51,8 @@ public class FriendshipService {
                 .sender(user)
                 .receiver(receiver)
                 .build();
+
+        eventPublisher.publishEvent(new FriendEventNotification(receiver, user));
 
         return friendRepository.save(friendship);
     }
@@ -137,7 +138,6 @@ public class FriendshipService {
     */
     @Transactional
     public void deleteMyFriendshipRequest(User user, Long requestId) {
-//        userService.isExisted(user);
         Friendship friendship = friendRepository.findById(requestId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_FRIENDSHIP));
 
@@ -150,8 +150,6 @@ public class FriendshipService {
 
     @Transactional(readOnly = true)
     public FriendshipShortViewResponse getMyFriendsList(User user) {
-//        userService.isExisted(user);
-
         return friendRepository.getMyFriendsListShort(user);
     }
 

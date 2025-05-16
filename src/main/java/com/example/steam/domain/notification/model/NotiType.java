@@ -4,5 +4,6 @@ public enum NotiType {
     PROFILE_COMMENT,
     SALE,
     LIKE,
-    REVIEW_COMMENT
+    REVIEW_COMMENT,
+    FRIEND
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationRepositoryCustomImpl implements NotificationRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-    private final QUser qUser = QUser.user;
     private final QNotification notification = QNotification.notification;
 
     @Override

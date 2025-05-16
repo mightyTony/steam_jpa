@@ -9,6 +9,7 @@ import com.example.steam.domain.user.User;
 import com.example.steam.domain.wish.query.WishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,6 +81,22 @@ public class NotificationServiceImpl implements NotificationService {
             notificationRepository.save(notification);
             sseService.sendNotification(receiver.getId(), notification);
         }
+    }
+
+    @Override
+    @Transactional(propagation = REQUIRES_NEW)
+    public void sendFriendNotifications(User receiver, User user) {
+        Notification notification = Notification.notify(
+                receiver.getId(),
+                NotiType.FRIEND,
+                "새로운 친구 요청",
+                user.getNickname() + "님이 친구 요청을 보냈습니다.",
+                false,
+                LocalDateTime.now().toString()
+        );
+
+        notificationRepository.save(notification);
+        sseService.sendNotification(receiver.getId(), notification);
     }
 
 

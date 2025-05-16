@@ -3,6 +3,7 @@ package com.example.steam.domain.auth;
 import com.example.steam.config.jwt.JwtTokenProvider;
 import com.example.steam.domain.auth.dto.UserJoinRequest;
 import com.example.steam.domain.auth.dto.UserJoinResponse;
+import com.example.steam.domain.notification.event.UserJoinEvent;
 import com.example.steam.domain.profile.Profile;
 import com.example.steam.domain.profile.query.ProfileRepository;
 import com.example.steam.domain.user.Role;
@@ -28,6 +29,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ProfileRepository profileRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public UserJoinResponse join(UserJoinRequest request) {
@@ -46,11 +48,8 @@ public class AuthService {
 
         authRepository.save(user);
 
-        Profile profile = Profile.builder()
-                .user(user)
-                .content("")
-                .build();
-        profileRepository.save(profile);
+        // 프로필 생성 이벤트
+        eventPublisher.publishEvent(new UserJoinEvent(user));
 
         return UserJoinResponse.fromUser(user);
     }
@@ -98,11 +97,7 @@ public class AuthService {
 
         authRepository.save(user);
 
-        Profile profile = Profile.builder()
-                .user(user)
-                .content("")
-                .build();
-        profileRepository.save(profile);
+        eventPublisher.publishEvent(new UserJoinEvent(user));
 
         return UserJoinResponse.fromUser(user);
     }

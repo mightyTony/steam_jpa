@@ -15,4 +15,6 @@ public interface NotificationService {
     void sendSaleNotifications(Game game);
 
     void sendProfileCommentNotification(User writer, Profile profile);
+
+    void sendFriendNotifications(User receiver, User user);
 }
