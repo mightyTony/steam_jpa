@@ -5,8 +5,8 @@
 Java, Spring, Spring Data JPA, Spring Security, QueryDSL, JWT, MySQL, Docker, Redis, AWS, Github Actions
 
 ## ERD 구조
-![diagram](https://github.com/user-attachments/assets/9d8812f7-a788-4f7c-a4f3-63fcda3f95f2)
 
+![mysteam](https://github.com/user-attachments/assets/cafda121-fdec-4838-947f-b7b1f7b244e3)
 
 ## API 명세
 
