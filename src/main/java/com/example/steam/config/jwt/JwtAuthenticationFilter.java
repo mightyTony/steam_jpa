@@ -15,23 +15,47 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
-//    private final CustomUserDetailsService userDetailsService;
     private final ApplicationContext applicationContext;
     private final JwtExceptionHandler jwtExceptionHandler;
 
+    private static final List<String> BLOCK_PATTERNS = List.of(
+            "/.git", "/.git/**", "/.env", "/.aws/**", "/.DS_Store",
+            "/**/*.php", "/index.php", "/**/eval-stdin.php", "/**/think/app/invokefunction",
+            "/cms/**", "/crm/**", "/admin/**", "/panel/**", "/webui/**",
+            "/geoserver/**", "/drupal/**", "/wordpress/**", "/joomla/**", "/typo3/**",
+            "/api/vendor/**", "/auth/x.js", "/owa/**", "/aaa", "/aab",
+            "/robots.txt", "/sitemap.xml", "/**/swagger-ui/**", "/hello.world",
+            "/containers/**", "/test_**", "/tests/**", "/testing/**", "/demo/**",
+            "/apps/**", "/app/**", "/lib/**", "/ws/**", "/V2/**", "/backup/**", "/blog/**", "/public/**",
+            "/favicon.ico", "/favicon-16x16.png", "/favicon-32x32.png", "/service-worker.js"
+    );
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String uri = request.getRequestURI();
+
+
+        for (String pattern : BLOCK_PATTERNS) {
+            if (pathMatcher.match(pattern, uri)) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+        }
+
         try {
             HandlerMethod handlerMethod = getHandlerMethod(request);
 
