@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/cms/**", "/crm/**", "/admin/**", "/panel/**", "/webui/**",
             "/geoserver/**", "/drupal/**", "/wordpress/**", "/joomla/**", "/typo3/**",
             "/api/vendor/**", "/auth/x.js", "/owa/**", "/aaa", "/aab",
-            "/robots.txt", "/sitemap.xml", "/**/swagger-ui/**", "/hello.world",
+            "/robots.txt", "/sitemap.xml", "/hello.world",
             "/containers/**", "/test_**", "/tests/**", "/testing/**", "/demo/**",
             "/apps/**", "/app/**", "/lib/**", "/ws/**", "/V2/**", "/backup/**", "/blog/**", "/public/**",
             "/favicon.ico", "/favicon-16x16.png", "/favicon-32x32.png", "/service-worker.js"
