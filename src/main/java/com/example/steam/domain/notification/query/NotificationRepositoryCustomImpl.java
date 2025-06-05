@@ -1,5 +1,6 @@
 package com.example.steam.domain.notification.query;
 
+import com.example.steam.domain.notification.Notification;
 import com.example.steam.domain.notification.QNotification;
 import com.example.steam.domain.notification.dto.NotificationDto;
 import com.example.steam.domain.notification.dto.QNotificationDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,5 +45,16 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                         notification.isRead.isFalse()
                 )
                 .fetch();
+    }
+
+    @Override
+    public Optional<Notification> findByIdAndUser(Long noticeId, User user) {
+
+        return Optional.ofNullable(queryFactory
+                .selectFrom(notification)
+                .where(notification.id.eq(noticeId)
+                        .and(notification.userId.eq(user.getId()))
+                )
+                .fetchOne());
     }
 }

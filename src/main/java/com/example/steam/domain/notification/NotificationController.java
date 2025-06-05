@@ -9,9 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
@@ -56,4 +54,26 @@ public class NotificationController {
     public SseEmitter subscribe(@AuthenticationPrincipal User user) {
         return sseService.connect(user.getId());
     }
+
+    // 알림 읽음 처리
+    @Operation(summary = "알림 읽음 처리")
+    @PutMapping("/{id}/read")
+    @LoginUser
+    public Response<Void> updateReadStatus(@PathVariable("id") Long noticeId, @AuthenticationPrincipal User user) {
+        notificationService.updateReadStatus(noticeId, user);
+
+        return Response.success();
+    }
+
+    // 알림 모두 읽음 처리
+//    @Operation(summary = "모든 알림 읽음 처리")
+//    @PutMapping
+//    @LoginUser
+//    public Response<Void> updateAllNotification(@AuthenticationPrincipal User user) {
+//        notificationService.updateReadStatusAll(user);
+//
+//        return Response.success();
+//    }
+
+    // 알림 삭제 처리
 }

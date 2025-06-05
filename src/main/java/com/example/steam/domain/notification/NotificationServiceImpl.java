@@ -7,6 +7,8 @@ import com.example.steam.domain.notification.query.NotificationRepository;
 import com.example.steam.domain.profile.Profile;
 import com.example.steam.domain.user.User;
 import com.example.steam.domain.wish.query.WishRepository;
+import com.example.steam.exception.ErrorCode;
+import com.example.steam.exception.SteamException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,23 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notification);
         sseService.sendNotification(receiver.getId(), notification);
     }
+
+    @Override
+    @Transactional
+    public void updateReadStatus(Long noticeId, User user) {
+        Notification notification = notificationRepository.findByIdAndUser(noticeId, user)
+                .orElseThrow(()-> new SteamException(ErrorCode.NOT_FOUND_NOTIFICATION));
+
+        notification.markRead();
+
+        notificationRepository.save(notification);
+    }
+
+//    @Override
+//    @Transactional
+//    public void updateReadStatusAll(User user) {
+//        notificationRepository.updateNotificationsByUserIdAndReadIsTrue(user.getId());
+//    }
 
 
 }

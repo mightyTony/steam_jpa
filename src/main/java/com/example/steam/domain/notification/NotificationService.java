@@ -17,4 +17,8 @@ public interface NotificationService {
     void sendProfileCommentNotification(User writer, Profile profile);
 
     void sendFriendNotifications(User receiver, User user);
+
+    void updateReadStatus(Long noticeId, User user);
+
+//    void updateReadStatusAll(User user);
 }

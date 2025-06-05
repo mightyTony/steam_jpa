@@ -62,7 +62,10 @@ public enum ErrorCode {
 
     // WISH
     ALREADY_IN_WISH(HttpStatus.BAD_REQUEST,"이미 찜 목록에 있습니다" ),
-    NOT_FOUND_WISH(HttpStatus.BAD_REQUEST, "찜 목록에 없습니다" );
+    NOT_FOUND_WISH(HttpStatus.BAD_REQUEST, "찜 목록에 없습니다" ),
+
+    // NOTIFICATION
+    NOT_FOUND_NOTIFICATION(HttpStatus.BAD_REQUEST, "잘못된 알람 구독" );
 
 
 

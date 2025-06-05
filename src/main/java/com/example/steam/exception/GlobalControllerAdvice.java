@@ -31,9 +31,9 @@ public class GlobalControllerAdvice {
                 .body(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
-//        log.warn("[WARN] 없는 리소스 요청: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-    }
+//    @ExceptionHandler(NoResourceFoundException.class)
+//    public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
+////        log.warn("[WARN] 없는 리소스 요청: {}", ex.getMessage());
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
+//    }
 }
