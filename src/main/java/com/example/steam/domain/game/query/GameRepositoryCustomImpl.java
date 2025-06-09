@@ -137,11 +137,12 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom {
                         game.dislikeCount
                 ))
                 .from(game)
-                .leftJoin(orderItem).on(orderItem.game.eq(game))
-                .leftJoin(order).on(orderItem.order.eq(order))
-                .where(order.status.eq(OrderStatus.COMPLETED))
+//                .leftJoin(orderItem).on(orderItem.game.eq(game))
+//                .leftJoin(order).on(orderItem.order.eq(order))
+//                .where(order.status.eq(OrderStatus.COMPLETED))
+                .where(game.onSale.isTrue())
                 .groupBy(game.id)
-                .orderBy(orderItem.count().desc())
+                .orderBy(game.sales.desc())
                 .limit(50)
                 .fetch();
     }
