@@ -2,8 +2,6 @@ package com.example.steam.batch;
 
 import com.example.steam.exception.BatchJobException;
 import com.example.steam.exception.ErrorCode;
-import lombok.RequiredArgsConstructor;
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.batch.core.Job;
