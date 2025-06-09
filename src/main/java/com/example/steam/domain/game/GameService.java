@@ -201,20 +201,21 @@ public class GameService {
         return result;
     }
 
-//    @Transactional
-//    public String updateGamePicture(MultipartFile imageFile, Long gameId) {
-//        // 게임 검증
-//        Game game = gameRepository.findById(gameId)
-//                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
-//        // 파일 검증
-//        if(imageFile.isEmpty()) {
-//            throw new SteamException(ErrorCode.NOT_FOUND_IMAGE_FILE);
-//        }
-//
-//        // 파일 사이즈
-//
-//        // 로컬에 파일 저장
-//
-//        // game jpa save
-//    }
+    public List<GameRankingResponse> getTopRanking(String topRankingKey, Duration topTtl) {
+        Object cachedData = redisTemplate.opsForValue().get(topRankingKey);
+
+        if(cachedData != null) {
+            log.info("[LOG] [캐시 히트] 탑 랭킹 게임 데이터 key: {}", topRankingKey);
+            return (List<GameRankingResponse>)cachedData;
+        }
+
+        log.warn("[LOG] [CACHE MISS] key: {} - DB 조회 후 캐싱 시도", topRankingKey);
+        List<GameRankingResponse> result = gameRepository.findTopGames();
+
+        // 캐싱
+        redisTemplate.opsForValue().set(topRankingKey, result, topTtl);
+        log.info("[LOG] [CACHE PUT] key: {}, TTL: {} days, size: {}", topRankingKey, topTtl.toDays(), result.size());
+
+        return result;
+    }
 }

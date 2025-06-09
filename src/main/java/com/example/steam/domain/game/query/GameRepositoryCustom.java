@@ -15,4 +15,5 @@ public interface GameRepositoryCustom {
 
     List<GameRankingResponse> findTopGamesBySales(LocalDateTime since);
 
+    List<GameRankingResponse> findTopGames();
 }

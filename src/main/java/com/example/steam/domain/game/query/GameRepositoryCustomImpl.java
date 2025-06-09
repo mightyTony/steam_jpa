@@ -115,6 +115,36 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<GameRankingResponse> findTopGames() {
+        QGame game = QGame.game;
+        QOrder order = QOrder.order;
+        QOrderItem orderItem = QOrderItem.orderItem;
+
+        return queryFactory
+                .select(new QGameRankingResponse(
+                        game.id,
+                        game.name,
+                        game.developer,
+                        game.publisher,
+                        game.price,
+                        game.totalPrice,
+                        game.pictureUrl,
+                        game.sales,
+                        game.discount,
+                        game.releaseDate,
+                        game.likeCount,
+                        game.dislikeCount
+                ))
+                .from(game)
+                .leftJoin(orderItem).on(orderItem.game.eq(game))
+                .leftJoin(order).on(orderItem.order.eq(order))
+                .where(order.status.eq(OrderStatus.COMPLETED))
+                .groupBy(game.id)
+                .orderBy(orderItem.count().desc())
+                .limit(50)
+                .fetch();
+    }
 
 
 }

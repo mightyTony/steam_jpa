@@ -34,8 +34,10 @@ public class GameController {
     private final GameService gameService;
     private static final String WEEKLY_RANKING_KEY = "game:ranking:weekly";
     private static final String MONTHLY_RANKING_KEY = "game:ranking:monthly";
+    private static final String TOP_RANKING_KEY = "game:ranking:top";
     private static final Duration WEEKLY_TTL = Duration.ofDays(7);
     private static final Duration MONTHLY_TTL = Duration.ofDays(31);
+    private static final Duration TOP_TTL = Duration.ofDays(7);
 
     @Operation(summary = "게임 등록", description = "관리자가 게임을 등록합니다. JSON 데이터 + 이미지 파일 업로드 필요")
     @AdminAuthorize
@@ -152,6 +154,16 @@ public class GameController {
     public Response<List<GameRankingResponse>> getMonthlyGameRanking() {
 
         List<GameRankingResponse> result = gameService.getTopGameRanking(MONTHLY_RANKING_KEY, MONTHLY_TTL, LocalDateTime.now().minusMonths(1));
+
+        return Response.success(result);
+    }
+
+    // 판매량 순위
+    @Operation(summary = "총 판매 랭킹 게임", description = "캐시에서 조회, 없을 시 DB 조회 후 캐시 저장")
+    @GetMapping("/best")
+    public Response<List<GameRankingResponse>> getTopRankingGame() {
+
+        List<GameRankingResponse> result = gameService.getTopRanking(TOP_RANKING_KEY, TOP_TTL);
 
         return Response.success(result);
     }
