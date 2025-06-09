@@ -1,5 +1,6 @@
 package com.example.steam;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -16,6 +17,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @EnableCaching
 @EnableScheduling
 @EnableAsync
+@EnableBatchProcessing
 public class SteamApplication {
 
     public static void main(String[] args) {

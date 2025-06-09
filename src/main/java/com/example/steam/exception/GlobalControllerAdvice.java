@@ -35,4 +35,13 @@ public class GlobalControllerAdvice {
     public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(BatchJobException.class)
+    public ResponseEntity<?> handleBatchException(BatchJobException e) {
+        ErrorCode code = e.getErrorCode();
+        return ResponseEntity
+                .status(code.getStatus())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Response.error(code.name(), code.getMessage()));
+    }
 }

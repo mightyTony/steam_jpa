@@ -47,6 +47,8 @@ dependencies {
     // webp
     implementation 'com.sksamuel.scrimage:scrimage-core:4.0.32'
     implementation 'com.sksamuel.scrimage:scrimage-webp:4.0.32'
+    implementation("com.sksamuel.scrimage:scrimage-core:4.2.0")
+    implementation("com.sksamuel.scrimage:scrimage-webp:4.2.0")
     // discord webhook
     implementation 'com.github.napstr:logback-discord-appender:1.0.0'
     // swagger
@@ -57,10 +59,9 @@ dependencies {
     // aws
     implementation 'software.amazon.awssdk:s3:2.21.5'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-    // image-webp
-    implementation("com.sksamuel.scrimage:scrimage-core:4.2.0")
-    implementation("com.sksamuel.scrimage:scrimage-webp:4.2.0")
-
+    // batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
     // QueryDsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"

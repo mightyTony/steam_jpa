@@ -65,8 +65,13 @@ public enum ErrorCode {
     NOT_FOUND_WISH(HttpStatus.BAD_REQUEST, "찜 목록에 없습니다" ),
 
     // NOTIFICATION
-    NOT_FOUND_NOTIFICATION(HttpStatus.BAD_REQUEST, "잘못된 알람 구독" );
+    NOT_FOUND_NOTIFICATION(HttpStatus.BAD_REQUEST, "잘못된 알람 구독" ),
 
+    // batch
+    BATCH_ALREADY_COMPLETE(HttpStatus.CONFLICT, "이미 완료된 배치 작업입니다."),
+    BATCH_ALREADY_RUNNING(HttpStatus.CONFLICT, "현재 실행 중인 배치 작업입니다."),
+    BATCH_RESTART_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "배치 작업 재시작 실패"),
+    BATCH_INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 배치 파라미터");
 
 
     private final HttpStatus status;
