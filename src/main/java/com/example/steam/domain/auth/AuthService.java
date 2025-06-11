@@ -74,7 +74,8 @@ public class AuthService {
 
         log.info("[LOG] [회원 탈퇴] - user : {}", user.getUsername());
 
-        userRepository.delete(user);
+//        userRepository.delete(user);
+        user.delete();
     }
 
     @Transactional
