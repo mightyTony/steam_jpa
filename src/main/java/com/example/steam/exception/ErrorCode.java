@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호를 틀리셨습니다" ),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "어드민 권한 없음" ),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다"),
+    AUTH_FORBIDDEN(HttpStatus.FORBIDDEN,"어드민 계정 지우지 마세요" ),
 
     // Game
     ALREADY_EXISTED_GAME(HttpStatus.CONFLICT, "이미 존재하는 게임 입니다."),
@@ -71,7 +72,7 @@ public enum ErrorCode {
     BATCH_ALREADY_COMPLETE(HttpStatus.CONFLICT, "이미 완료된 배치 작업입니다."),
     BATCH_ALREADY_RUNNING(HttpStatus.CONFLICT, "현재 실행 중인 배치 작업입니다."),
     BATCH_RESTART_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "배치 작업 재시작 실패"),
-    BATCH_INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 배치 파라미터");
+    BATCH_INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 배치 파라미터"), ;
 
 
     private final HttpStatus status;

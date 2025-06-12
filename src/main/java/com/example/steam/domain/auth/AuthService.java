@@ -72,6 +72,10 @@ public class AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_USER_NAME));
 
+        if(user.getRole().equals(Role.ADMIN)){
+            throw new SteamException(ErrorCode.AUTH_FORBIDDEN);
+        }
+
         log.info("[LOG] [회원 탈퇴] - user : {}", user.getUsername());
 
 //        userRepository.delete(user);
