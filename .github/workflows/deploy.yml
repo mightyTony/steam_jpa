@@ -85,9 +85,7 @@ jobs:
 
             # prometheus.yml 전달
             echo "${{ secrets.PROMETHEUS_YML }}" > infra/prometheus.yml
-
-            mkdir -p certbot/www
-            
+  
             cd infra
 
             # 기존 컨테이너 중지 및 제거
