@@ -86,7 +86,7 @@ jobs:
             # prometheus.yml 전달
             echo "${{ secrets.PROMETHEUS_YML }}" > infra/prometheus.yml
 
-            mkdir -p infra/certbot/www
+            mkdir -p certbot/www
             
             cd infra
 
