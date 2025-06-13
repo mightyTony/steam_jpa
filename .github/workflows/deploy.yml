@@ -59,8 +59,10 @@ jobs:
     needs: CI
     runs-on: ubuntu-latest
     steps:
-      - if: ${{ needs.CI.result == 'failure' }}
+      - name: CI 실패 시 에러 메시지
+        if: ${{ needs.CI.result == 'failure' }}
         run: echo "CI job 실패"
+
       - name: 운영 서버에 배포
         uses: appleboy/ssh-action@master
         id: deploy-prod
