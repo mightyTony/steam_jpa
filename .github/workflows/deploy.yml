@@ -29,13 +29,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      #      - name: application.yml 만들어서 넣어두기
-      #        if: contains(github.ref, 'master')  # master일 때만 실행
-      #        run: |
-      #          cd ./src/main/resources
-      #          touch ./application.yml
-      #          echo "${{ secrets.YML }}" > ./application.yml
-      #        shell: bash
+      # - name: application.yml 만들어서 넣어두기
+      #   if: contains(github.ref, 'master')  # master일 때만 실행
+      #   run: |
+      #     cd ./src/main/resources
+      #     touch ./application.yml
+      #     echo "${{ secrets.YML }}" > ./application.yml
+      #   shell: bash
 
       - name: 그래들 실행 권한 부여
         run: chmod +x gradlew
@@ -73,36 +73,32 @@ jobs:
           port: 22
           key: ${{ secrets.EC2_KEY }}
           script: |
-                    cd /home/ec2-user/app/
-                    
-                    # 배포 디렉토리 생성
-                    mkdir -p infra
-            
-            #            # docker-compose.yml 복사 (사용 안함)
-            #            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            cd /home/ec2-user/app/
+            # 배포 디렉토리 생성
+            mkdir -p infra
 
             # application-prod.yml 복사
-                    echo "${{ secrets.APPLICATION_PROD_YML }}" > application-prod.yml
-            
+            echo "${{ secrets.APPLICATION_PROD_YML }}" > application-prod.yml
+
             # docker-compose.yml 전달
-                    echo "${{ secrets.DOCKER_COMPOSE_YML }}" > infra/docker-compose.yml
-            
+            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > infra/docker-compose.yml
+
             # prometheus.yml 전달
-                    echo "${{ secrets.PROMETHEUS_YML }}" > infra/prometheus.yml
-            
+            echo "${{ secrets.PROMETHEUS_YML }}" > infra/prometheus.yml
+
             # nginx.conf 전달
-                    echo "${{ secrets.NGINX_CONF }}" > infra/nginx.conf
-                    
-                    cd infra
+            echo "${{ secrets.NGINX_CONF }}" > infra/nginx.conf
+
+            cd infra
 
             # 기존 컨테이너 중지 및 제거
-                    sudo docker-compose down
+            sudo docker-compose down
 
             # 최신 이미지 pull
-                    sudo docker-compose pull
+            sudo docker-compose pull
 
             # 컨테이너 실행
-                    sudo docker-compose up -d
+            sudo docker-compose up -d
 
             # 사용하지 않는 이미지 삭제
-                    sudo docker image prune -f
+            sudo docker image prune -f
