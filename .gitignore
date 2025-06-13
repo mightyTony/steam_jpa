@@ -45,3 +45,4 @@ src/main/generated/
 
 ## nginx
 nginx.conf
+app.conf
