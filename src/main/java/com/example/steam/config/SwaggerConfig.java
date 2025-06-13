@@ -22,7 +22,7 @@ public class SwaggerConfig {
     // http://localhost:4860/swagger-ui/index.html#/
 
 //    @Profile({"local","dev"})
-    @Profile("dev")
+    @Profile({"dev","default"})
     @Bean
     public OpenAPI devOpenAPI() {
 
@@ -45,12 +45,12 @@ public class SwaggerConfig {
                         .name(jwtSchemeName)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
-                        .bearerFormat("JWT"))
-                .addSecuritySchemes(refreshName, new SecurityScheme()
-                        .name(refreshName)
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("REFRESH"));
+                        .bearerFormat("JWT"));
+//                .addSecuritySchemes(refreshName, new SecurityScheme()
+//                        .name(refreshName)
+//                        .type(SecurityScheme.Type.HTTP)
+//                        .scheme("bearer")
+//                        .bearerFormat("REFRESH"));
 
         return new OpenAPI()
                 .info(info)
@@ -82,12 +82,12 @@ public class SwaggerConfig {
                         .name(jwtSchemeName)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
-                        .bearerFormat("JWT"))
-                .addSecuritySchemes(refreshName, new SecurityScheme()
-                        .name(refreshName)
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("REFRESH"));
+                        .bearerFormat("JWT"));
+//                .addSecuritySchemes(refreshName, new SecurityScheme()
+//                        .name(refreshName)
+//                        .type(SecurityScheme.Type.HTTP)
+//                        .scheme("bearer")
+//                        .bearerFormat("REFRESH"));
 
         return new OpenAPI()
                 .info(info)

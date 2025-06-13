@@ -11,7 +11,6 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-//    @Value("${origin.url}")
 //    private String ALLOWED_ORIGINS;
 
     //FIXME : 나중에 헤더 제한
@@ -28,6 +27,7 @@ public class CorsConfig {
         config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedHeaders(ALLOWED_HEADERS);
         config.setAllowedMethods(ALLOWED_METHODS);
+        config.setExposedHeaders(List.of("Authorization"));
         source.registerCorsConfiguration("/**", config);
         return source;
     }

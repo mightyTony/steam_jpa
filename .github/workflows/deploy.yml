@@ -74,12 +74,24 @@ jobs:
           script: |
             cd /home/ec2-user/app/
 
-            # docker-compose.yml 복사
-            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            mkdir -p infra
+
+#            # docker-compose.yml 복사
+#            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
 
             # application-prod.yml 복사
             echo "${{ secrets.APPLICATION_PROD_YML }}" > application-prod.yml
-
+            
+            # docker-compose.yml 전달
+            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > infra/docker-compose.yml
+  
+            # prometheus.yml 전달
+            echo "${{ secrets.PROMETHEUS_YML }}" > infra/prometheus.yml
+            
+            # nginx.conf 전달
+            echo "${{ secrets.NGINX_CONF }}" > infra/nginx.conf
+  
+            cd infra 
             # 기존 컨테이너 중지 및 제거
             sudo docker-compose down
 
