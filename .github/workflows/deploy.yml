@@ -1,8 +1,8 @@
-name: CICD - Github Actions CI & Deploy to EC2
+name: CICD - GitHub Actions CI & Deploy to EC2
 
 on:
   push:
-    branches: [ "master" ]  # master 브랜치에 push 될 때만 실행
+    branches: ["master"]
 
 permissions:
   contents: read
@@ -11,7 +11,7 @@ jobs:
   CI:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3  # GitHub 레포지토리 체크아웃
+      - uses: actions/checkout@v3
 
       - name: JDK 17 설정
         uses: actions/setup-java@v3
@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 그래들 캐싱
+      - name: Gradle 캐싱
         uses: actions/cache@v3
         with:
           path: |
@@ -29,28 +29,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # - name: application.yml 만들어서 넣어두기
-      #   if: contains(github.ref, 'master')  # master일 때만 실행
-      #   run: |
-      #     cd ./src/main/resources
-      #     touch ./application.yml
-      #     echo "${{ secrets.YML }}" > ./application.yml
-      #   shell: bash
-
-      - name: 그래들 실행 권한 부여
+      - name: Gradle 실행 권한 부여
         run: chmod +x gradlew
 
-      - name: 그래들로 빌드 (no test)
-        run: ./gradlew clean build -x test  # 테스트 제외 빌드
+      - name: Build (테스트 제외)
+        run: ./gradlew clean build -x test
 
-      - name: 도커허브 로그인
+      - name: DockerHub 로그인
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: 도커 빌드 & 푸시
-        if: contains(github.ref, 'master')  # master일 때만 푸시
+      - name: Docker 빌드 & 푸시
         run: |
           docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
@@ -59,43 +50,24 @@ jobs:
     needs: CI
     runs-on: ubuntu-latest
     steps:
-      - name: CI 실패 시 에러 메시지
-        if: ${{ needs.CI.result == 'failure' }}
-        run: echo "CI job 실패"
-
-      - name: 운영 서버에 배포
-        if: ${{ contains(github.ref, 'master') }}  # master일 때만 배포
+      - name: EC2 서버로 배포
         uses: appleboy/ssh-action@master
-        id: deploy-prod
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           port: 22
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /home/ec2-user
-            # 배포 디렉토리 생성
-            mkdir -p infra
+            mkdir -p ~/infra
 
-            # application-prod.yml 복사
-            echo "${{ secrets.APPLICATION_PROD_YML }}" > infra/application-prod.yml
+            echo "${{ secrets.DOCKER_COMPOSE_YML_BASE64 }}" | base64 -d > ~/infra/docker-compose.yml
+            echo "${{ secrets.APPLICATION_PROD_YML_BASE64 }}" | base64 -d > ~/infra/application-prod.yml
+            echo "${{ secrets.PROMETHEUS_YML_BASE64 }}" | base64 -d > ~/infra/prometheus.yml
 
-            # docker-compose.yml 전달
-            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > infra/docker-compose.yml
+            cd ~/infra
 
-            # prometheus.yml 전달
-            echo "${{ secrets.PROMETHEUS_YML }}" > infra/prometheus.yml
-  
-            cd infra
+            docker-compose down --remove-orphans
+            docker-compose pull
+            docker-compose up -d
 
-            # 기존 컨테이너 중지 및 제거
-            sudo docker-compose down --remove-orphans
-
-            # 최신 이미지 pull
-            sudo docker-compose pull
-
-            # 컨테이너 실행
-            sudo docker-compose up -d
-
-            # 사용하지 않는 이미지 삭제
-            sudo docker image prune -f
+            docker image prune -f
