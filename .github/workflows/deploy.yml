@@ -60,13 +60,13 @@ jobs:
           script: |
             mkdir -p ~/infra
 
-            echo "${{ secrets.DOCKER_COMPOSE_YML_BASE64 }}" | base64 -d > ~/infra/docker-compose.yml
-            echo "${{ secrets.APPLICATION_PROD_YML_BASE64 }}" | base64 -d > ~/infra/application-prod.yml
-            echo "${{ secrets.PROMETHEUS_YML_BASE64 }}" | base64 -d > ~/infra/prometheus.yml
+            echo "${{ secrets.DOCKER_COMPOSE_YML }}" | base64 -d > ~/infra/docker-compose.yml
+            echo "${{ secrets.APPLICATION_PROD_YML }}" | base64 -d > ~/infra/application-prod.yml
+            echo "${{ secrets.PROMETHEUS_YML }}" | base64 -d > ~/infra/prometheus.yml
 
             cd ~/infra
 
-            docker-compose down --remove-orphans
+            docker-compose down 
             docker-compose pull
             docker-compose up -d
 
