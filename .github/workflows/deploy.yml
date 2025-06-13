@@ -73,7 +73,7 @@ jobs:
           port: 22
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /home/ec2-user/app/
+            cd /home/ec2-user
             # 배포 디렉토리 생성
             mkdir -p infra
 
