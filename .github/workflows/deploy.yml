@@ -78,7 +78,7 @@ jobs:
             mkdir -p infra
 
             # application-prod.yml 복사
-            echo "${{ secrets.APPLICATION_PROD_YML }}" > application-prod.yml
+            echo "${{ secrets.APPLICATION_PROD_YML }}" > infra/application-prod.yml
 
             # docker-compose.yml 전달
             echo "${{ secrets.DOCKER_COMPOSE_YML }}" > infra/docker-compose.yml
