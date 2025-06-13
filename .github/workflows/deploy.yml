@@ -59,8 +59,8 @@ jobs:
     needs: CI
     runs-on: ubuntu-latest
     steps:
-      - if: ${{ needs.CI.result == 'failure' }}
-        run: echo "CI job이 실패했습니다."
+#      - if: ${{ needs.CI.result == 'failure' }}
+#        run: echo "CI job이 실패했습니다."
 
       - name: 운영 서버에 배포
         uses: appleboy/ssh-action@master
@@ -103,3 +103,5 @@ jobs:
 
             # 사용하지 않는 이미지 삭제
             sudo docker image prune -f
+      - if: ${{ needs.CI.result == 'failure' }}
+        run: echo "CI job이 실패했습니다."
