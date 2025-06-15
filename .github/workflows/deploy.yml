@@ -50,9 +50,6 @@ jobs:
     needs: CI
     runs-on: ubuntu-latest
     steps:
-      - name: 디버깅 - docker-compose.yml 내용 확인
-        run: |
-          echo "${{ secrets.DOCKER_COMPOSE_YML }}" -d
       - name: EC2 서버로 배포
         uses: appleboy/ssh-action@master
         with:
@@ -63,6 +60,7 @@ jobs:
           script: |
             mkdir -p ~/infra
             chmod 777 ~/infra
+            
             echo "${{ secrets.DOCKER_COMPOSE_YML }}" > ~/infra/docker-compose.yml
             echo "${{ secrets.APPLICATION_PROD_YML }}" > ~/infra/application-prod.yml
             echo "${{ secrets.PROMETHEUS_YML }}" > ~/infra/prometheus.yml
