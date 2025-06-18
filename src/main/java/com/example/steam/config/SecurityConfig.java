@@ -61,7 +61,16 @@ public class SecurityConfig {
                 .httpBasic((basic) -> basic.disable())
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(AUTH_WHITELIST).permitAll()
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/swagger-resources/**",
+                                        "/webjars/**",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/actuator/**",
+                                        "/api/v1/auth/**",
+                                        "/api/v1/payment/success**").permitAll()
 //                                .requestMatchers(PUBLIC_API_LIST).permitAll()
 //                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                                .anyRequest().authenticated()
