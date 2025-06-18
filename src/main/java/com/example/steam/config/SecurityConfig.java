@@ -32,7 +32,7 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/swagger-ui/index.html",
             "/swagger-resources/**",
-            "/webjars/**"
+            "/webjars/**",
             "/v3/api-docs",  // 문서 초기 로딩용
             "/v3/api-docs/**", // 세부 문서
             "/swagger-ui-custom.html",
