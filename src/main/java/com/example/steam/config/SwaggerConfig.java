@@ -93,8 +93,8 @@ public class SwaggerConfig {
                 .info(info)
                 .addSecurityItem(securityRequirement)
 //                .addServersItem(new Server().url("https://spring.tonyworld.kr"))
-                //.addServersItem(new Server().url("https://tonyworld.kr"))
-                .addServersItem(new Server().url("http://localhost:8080").description("prod"))
+                .addServersItem(new Server().url("https://tonyworld.kr").description("prod"))
+                //.addServersItem(new Server().url("http://localhost:8080").description("prod"))
                 .components(components);
     }
 }
