@@ -27,8 +27,8 @@ public class SecurityConfig {
     private final ApplicationContext applicationContext;
     private final CorsConfig corsConfig;
     private final String[] AUTH_WHITELIST = {
-            "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html", "/actuator/**", "/api*",
-            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**","/api/v1/payment/success**", "/v3/**", "/"
+            "/swagger-ui/**", "/api-docs", "/v3/api-docs/**", "/swagger-ui-custom.html", "/actuator/**", "/api*",
+            "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**","/api/v1/payment/success**", "/v3/**", "/"
     };
 
     @Bean
@@ -53,7 +53,7 @@ public class SecurityConfig {
 //                                .requestMatchers(PUBLIC_API_LIST).permitAll()
 //                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                                .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex
