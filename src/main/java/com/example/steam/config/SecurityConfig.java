@@ -27,8 +27,18 @@ public class SecurityConfig {
     private final ApplicationContext applicationContext;
     private final CorsConfig corsConfig;
     private final String[] AUTH_WHITELIST = {
-            "/swagger-ui/**", "/api-docs", "/v3/api-docs/**", "/swagger-ui-custom.html", "/actuator/**", "/api*",
-            "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**","/api/v1/payment/success**", "/v3/**", "/"
+            "/",  // 기본 루트
+            "/swagger-ui/**", // 정적 자원 포함
+            "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/v3/api-docs",  // 문서 초기 로딩용
+            "/v3/api-docs/**", // 세부 문서
+            "/swagger-ui-custom.html",
+            "/api-docs",
+            "/api-docs/**",
+            "/actuator/**",
+            "/api/v1/auth/**",
+            "/api/v1/payment/success**"
     };
 
     @Bean
