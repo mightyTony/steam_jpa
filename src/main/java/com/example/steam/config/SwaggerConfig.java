@@ -71,10 +71,10 @@ public class SwaggerConfig {
 
         // 스웨거에서 인증(Authorize) 버튼 세팅
         String jwtSchemeName = "Authorization";
-        String refreshName = "Refresh";
+        //String refreshName = "Refresh";
 
         // API 요청 헤더에 인증 정보 포함
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName).addList(refreshName); // 헤더에 토큰 포함
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName); //.addList(refreshName); // 헤더에 토큰 포함
 
         // SecurityScheme 등록
         Components components = new Components()
@@ -83,18 +83,11 @@ public class SwaggerConfig {
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                         .bearerFormat("JWT"));
-//                .addSecuritySchemes(refreshName, new SecurityScheme()
-//                        .name(refreshName)
-//                        .type(SecurityScheme.Type.HTTP)
-//                        .scheme("bearer")
-//                        .bearerFormat("REFRESH"));
 
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(securityRequirement)
-//                .addServersItem(new Server().url("https://spring.tonyworld.kr"))
-                //.addServersItem(new Server().url("https://tonyworld.kr").description("prod"))
-                //.addServersItem(new Server().url("http://localhost:8080").description("prod"))
+                .addServersItem(new Server().url("https://tonyworld.kr").description("prod server"))
                 .components(components);
     }
 }
