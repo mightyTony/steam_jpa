@@ -87,7 +87,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .addServersItem(new Server().url("https://tonyworld.kr").description("prod server"))
+                .addServersItem(new Server()
+                        .url("https://tonyworld.kr").description("prod server"))
                 .components(components);
     }
 }
