@@ -19,6 +19,7 @@ import java.util.Optional;
 public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     QFriendship friendship = QFriendship.friendship;
+    QUser qUser = QUser.user;
     @Override
     public boolean isFriend(Long myId, Long friendId) {
 
@@ -96,6 +97,7 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
                         friendship.id,
                         friendship.sender.id,
                         friendship.receiver.id,
+                        friendship.receiver.nickname,
                         friendship.status
                 ))
                 .from(friendship)

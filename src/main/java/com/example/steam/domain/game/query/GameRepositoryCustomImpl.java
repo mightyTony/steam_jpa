@@ -65,16 +65,9 @@ public class GameRepositoryCustomImpl implements GameRepositoryCustom {
     }
 
     private OrderSpecifier<?> getOrderSpecifier(String category) {
-        /*
-        if(category.equals("top")){
+        if (category == null || category.isBlank()) {
             return game.sales.desc();
         }
-        else if(category.equals("new"))
-            return game.createdAt.desc();
-        else if(category.equals("hotsale"))
-            return game.discount.desc();
-        else return game.id.desc();
-         */
         return switch (category) {
             case "top" -> game.sales.desc();
             case "new" -> game.createdAt.desc();

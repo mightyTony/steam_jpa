@@ -4,12 +4,9 @@ import com.example.steam.domain.cart.Cart;
 import com.example.steam.domain.cart.query.CartRepository;
 import com.example.steam.domain.game.Game;
 import com.example.steam.domain.game.query.GameRepository;
+import com.example.steam.domain.order.*;
 import com.example.steam.domain.profile.mygame.MyGame;
 import com.example.steam.domain.profile.query.MyGameRepository;
-import com.example.steam.domain.order.Order;
-import com.example.steam.domain.order.OrderItem;
-import com.example.steam.domain.order.OrderItemRepository;
-import com.example.steam.domain.order.OrderService;
 import com.example.steam.domain.order.dto.KakaoApproveRequest;
 import com.example.steam.domain.order.dto.KakaoPayApprovalResponse;
 import com.example.steam.domain.order.dto.KakaoPayReadyResponse;
@@ -137,6 +134,7 @@ public class KakaoPayService implements OrderService {
         Order order = Order.builder()
                 .user(user)
                 .totalPrice(totalAmount)
+                .status(OrderStatus.READY)
                 .build();
         orderRepository.save(order);
 
@@ -269,15 +267,58 @@ public class KakaoPayService implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderHistoryResponse> getOrderHistory(User user) {
-        List<Order> orders = orderRepository.findOrdersWithItemsByUser(user);
+        List<OrderHistoryResponse> orders = orderRepository.findOrdersWithItemsByUser(user);
 
-        List<OrderHistoryResponse> historyList = new ArrayList<>();
+//        List<OrderHistoryResponse> historyList = new ArrayList<>();
 
-        for (Order order : orders) {
-            historyList.add(OrderHistoryResponse.fromEntity(order));
+//        for (Order order : orders) {
+//            historyList.add(OrderHistoryResponse.fromEntity(order));
+//        }
+
+        return orders;
+    }
+
+    @Transactional
+    @Override
+    public Game getFreeGame(User user, Long gameId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
+
+        if(game.getTotalPrice() > 0) {
+            throw new SteamException(ErrorCode.NOT_FREE_GAME);
         }
 
-        return historyList;
+        if(myGameRepository.existsByUserAndGame(user, game)){
+            throw new SteamException(ErrorCode.ALREADY_BUY_GAME);
+        }
+
+        myGameRepository.save(
+                MyGame.builder()
+                .user(user)
+                .game(game)
+                .build()
+        );
+
+        Order order = Order.builder()
+                .user(user)
+                .tid("FREE")
+                .totalPrice(0)
+                .status(OrderStatus.COMPLETED)
+                .build();
+
+        orderRepository.save(order);
+
+        OrderItem orderItem = OrderItem.builder()
+                .order(order)
+                .game(game)
+                .price(0)
+                .build();
+
+        orderItemRepository.save(orderItem);
+
+        game.increaseSales();
+
+        return game;
     }
 
     // 내 게임에 등록

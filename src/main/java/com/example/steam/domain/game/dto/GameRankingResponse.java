@@ -23,7 +23,7 @@ public class GameRankingResponse {
 //    private  boolean onSale;
     private String releaseDate;
     private int likeCount;
-    private int disLikeCount;
+    private int dislikeCount;
 
     @QueryProjection
     public GameRankingResponse(Long id, String name,
@@ -31,7 +31,7 @@ public class GameRankingResponse {
                                int price, int totalPrice,
                                String pictureUrl, int sales,
                                int discount, String releaseDate,
-                               int likeCount, int disLikeCount) {
+                               int likeCount, int dislikeCount) {
         this.id = id;
         this.name = name;
         this.developer = developer;
@@ -44,6 +44,6 @@ public class GameRankingResponse {
 //        this.onSale = onSale;
         this.releaseDate = releaseDate;
         this.likeCount = likeCount;
-        this.disLikeCount = disLikeCount;
+        this.dislikeCount = dislikeCount;
     }
 }

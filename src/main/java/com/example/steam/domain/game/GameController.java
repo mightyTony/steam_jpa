@@ -97,7 +97,7 @@ public class GameController {
 
     // 게임 목록 조회 (검색 + 페이징) 카테고리 : 인기상품, 신규게임, 가격
     @Operation(summary = "게임 목록 조회", description = "카테고리, 이름, 가격으로 검색하고 페이징 처리합니다.")
-    @GetMapping("/category")
+    @GetMapping("")
     public Response<Page<GameDetailResponse>> getGamesByCategory(
             @Parameter(
                     in = ParameterIn.QUERY,

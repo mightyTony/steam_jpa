@@ -1,5 +1,6 @@
 package com.example.steam.domain.order;
 
+import com.example.steam.domain.game.Game;
 import com.example.steam.domain.order.dto.KakaoPayApprovalResponse;
 import com.example.steam.domain.order.dto.KakaoPayReadyResponse;
 import com.example.steam.domain.order.dto.OrderHistoryResponse;
@@ -59,7 +60,7 @@ public class OrderController {
     @LoginUser
     @PostMapping("/ready/now")
     public Response<KakaoPayReadyResponse> payNow(
-                                                                   @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal User user,
             @Parameter(description = "결제할 게임 ID", example = "5") @RequestParam("game_id") Long gameId) {
         log.info("[LOG] [즉시 결제 요청] - user : {}, game_id {} ", user.getUsername(), gameId);
         KakaoPayReadyResponse response = orderService.readyPaymentNow(user, gameId);
@@ -73,6 +74,7 @@ public class OrderController {
     public Response<List<OrderHistoryResponse>> getOrderHistory(@AuthenticationPrincipal User user) {
         log.info("[LOG] [결제 내역 조회] - user : {}", user.getUsername());
         List<OrderHistoryResponse> history = orderService.getOrderHistory(user);
+        log.info("[LOG] [결제 내역 조회 결과] - history : {}", history);
         return Response.success(history);
     }
 
@@ -81,12 +83,12 @@ public class OrderController {
     // 결제 승인
     @Operation(summary = "결제 승인", description = "카카오페이로부터 결제 성공 시 승인 처리합니다.")
     @GetMapping("/success")
-    public Response<KakaoPayApprovalResponse> approvePayment(@RequestParam("pg_token") String pg_token,
+    public Response<Void> approvePayment(@RequestParam("pg_token") String pg_token,
                                                              @RequestParam("oid") Long orderId,
                                                              HttpServletRequest request) {
         log.info("[LOG] [결제 승인] - oid: {}", orderId);
         KakaoPayApprovalResponse response = orderService.approvePayment(orderId, pg_token);
-        return Response.success(response);
+        return Response.success();
     }
 
     // 결제 취소
@@ -105,6 +107,16 @@ public class OrderController {
         log.info("[LOG] [결제 실패] - oid: {}", orderId);
         orderService.failOrder(orderId);
         return Response.error(HttpStatus.BAD_REQUEST.toString(), "결제가 실패하였습니다.");
+    }
+
+    // 무료 게임 구매
+    @PostMapping("/free-game")
+    public Response<Void> getFreeGame(@AuthenticationPrincipal User user,
+                                      @RequestParam("game_id") Long gameId) {
+        Game game = orderService.getFreeGame(user, gameId);
+        log.info("[LOG] [무료 게임 라이브러리 등록] - {}, {}",user, game.getName());
+
+        return Response.success();
     }
 
 }

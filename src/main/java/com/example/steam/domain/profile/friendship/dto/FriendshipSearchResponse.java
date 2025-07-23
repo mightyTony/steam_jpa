@@ -12,13 +12,15 @@ public class FriendshipSearchResponse {
     private final Long id;
     private final Long senderId;
     private final Long receiverId;
+    private final String receiverName;
     private final FriendStatus status;
 
     @QueryProjection
-    public FriendshipSearchResponse(Long id, Long senderId, Long receiverId, FriendStatus status) {
+    public FriendshipSearchResponse(Long id, Long senderId, Long receiverId, String receiverName, FriendStatus status) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
+        this.receiverName = receiverName;
         this.status = status;
     }
 }

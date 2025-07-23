@@ -4,6 +4,8 @@ import com.example.steam.domain.game.QGame;
 import com.example.steam.domain.order.Order;
 import com.example.steam.domain.order.QOrder;
 import com.example.steam.domain.order.QOrderItem;
+import com.example.steam.domain.order.dto.OrderHistoryResponse;
+import com.example.steam.domain.order.dto.QOrderHistoryResponse;
 import com.example.steam.domain.user.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,26 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     QGame game = QGame.game;
 
     @Override
-    public List<Order> findOrdersWithItemsByUser(User user) {
+    public List<OrderHistoryResponse> findOrdersWithItemsByUser(User user) {
+//        return queryFactory
+//                .selectFrom(order)
+//                .leftJoin(order.orderItems, orderItem).fetchJoin()
+//                .leftJoin(orderItem.game, game).fetchJoin()
+//                .where(order.user.eq(user))
+//                .orderBy(order.createdAt.desc())
+//                .fetch();
         return queryFactory
-                .selectFrom(order)
-                .leftJoin(order.orderItems, orderItem).fetchJoin()
-                .leftJoin(orderItem.game, game).fetchJoin()
+                .select(new QOrderHistoryResponse(
+                        game.id,
+                        game.name,
+                        order.id,
+                        order.totalPrice,
+                        order.status.stringValue(),
+                        order.createdAt.stringValue()
+                ))
+                .from(order)
+                .leftJoin(order.orderItems, orderItem)
+                .leftJoin(orderItem.game, game)
                 .where(order.user.eq(user))
                 .orderBy(order.createdAt.desc())
                 .fetch();

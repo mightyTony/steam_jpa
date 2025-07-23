@@ -12,9 +12,9 @@ import lombok.Getter;
 @Schema(description = "게임 리뷰 작성 요청 DTO")
 public class GameReviewCreateRequest {
 
-    @NotNull(message = "게임 ID를 입력하세요")
-    @Schema(description = "게임 ID", example = "1")
-    private Long gameId;
+//    @NotNull(message = "게임 ID를 입력하세요")
+//    @Schema(description = "게임 ID", example = "1")
+//    private Long gameId;
 
     @NotNull(message = "추천 여부를 입력하세요. 추천 = true, 비추천 = false")
     @Schema(description = "리뷰 추천 여부", example = "true")

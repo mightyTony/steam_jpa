@@ -1,5 +1,6 @@
 package com.example.steam.domain.order;
 
+import com.example.steam.domain.game.Game;
 import com.example.steam.domain.order.dto.KakaoPayApprovalResponse;
 import com.example.steam.domain.order.dto.KakaoPayReadyResponse;
 import com.example.steam.domain.order.dto.OrderHistoryResponse;
@@ -22,4 +23,6 @@ public interface OrderService {
     void failOrder(Long orderId);
 
     List<OrderHistoryResponse> getOrderHistory(User user);
+
+    Game getFreeGame(User user, Long gameId);
 }

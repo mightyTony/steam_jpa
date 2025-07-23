@@ -21,7 +21,7 @@ public enum ErrorCode {
     ALREADY_EXISTED_GAME(HttpStatus.CONFLICT, "이미 존재하는 게임 입니다."),
     NOT_FOUND_GAME(HttpStatus.BAD_REQUEST, "존재 하지 않는 게임 입니다." ),
     NOT_FOUND_IN_MYGAME(HttpStatus.CONFLICT, "내 게임 목록에 없는 게임 입니다." ),
-
+    NOT_FREE_GAME(HttpStatus.BAD_REQUEST, "무료 게임이 아닙니다." ),
     // Cart
     ALREADY_IN_CART(HttpStatus.CONFLICT, "장바구니에 이미 있습니다."),
     NOT_FOUND_GAME_IN_CART(HttpStatus.CONFLICT, "장바구니에 해당 게임이 존재하지 않습니다." ),

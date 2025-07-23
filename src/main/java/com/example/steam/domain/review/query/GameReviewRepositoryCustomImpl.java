@@ -80,6 +80,7 @@ public class GameReviewRepositoryCustomImpl implements GameReviewRepositoryCusto
                         review.id,
                         user.username,
                         user.nickname,
+                        user.profileImageUrl,
                         review.recommend,
                         reviewLike.id.count().intValue(),
                         review.content,

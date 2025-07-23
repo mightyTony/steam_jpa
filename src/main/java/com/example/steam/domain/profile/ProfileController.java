@@ -91,35 +91,35 @@ public class ProfileController {
         res : content, writerId, writerName, createdTime, updatedTime
      */
     @Operation(summary = "댓글 작성", description = "프로필에 댓글을 작성합니다.")
-    @PostMapping("/{profileId}/comment")
+    @PostMapping("/{userId}/comment")
     @LoginUser
     public Response<CommentResponse> addComment(@AuthenticationPrincipal User writer,
-                                                @PathVariable("profileId") Long profileId,
+                                                @PathVariable("userId") Long userId,
                                                 @Valid @RequestBody CommentPostRequest request) {
-        CommentResponse response = profileService.postComment(writer, profileId, request);
+        CommentResponse response = profileService.postComment(writer, userId, request);
         return Response.success(response);
     }
 
     @Operation(summary = "댓글 삭제", description = "특정 댓글을 삭제합니다.")
-    @DeleteMapping("/{profileId}/comment/{commentId}")
+    @DeleteMapping("/{userId}/comment/{commentId}")
     @LoginUser
     public Response<Void> deleteComment(@AuthenticationPrincipal User user,
-                                        @PathVariable("profileId") Long profileId,
+                                        @PathVariable("userId") Long userId,
                                         @PathVariable("commentId") Long commentId) {
 
-        profileService.deleteComment(user, profileId, commentId);
+        profileService.deleteComment(user, userId, commentId);
 
         return Response.success();
     }
 
     @Operation(summary = "프로필 내 댓글 목록 조회", description = "해당 프로필의 댓글을 페이징 처리하여 조회합니다.")
-    @GetMapping("/{profileId}/comment")
-    public Response<Page<CommentResponse>> getComments(@PathVariable("profileId") Long profileId,
+    @GetMapping("/{userId}/comment")
+    public Response<Page<CommentResponse>> getComments(@PathVariable("userId") Long userId,
                                                        @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                                        @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                                        @ParameterObject Pageable pageable) {
 
-        Page<CommentResponse> responses = profileService.getComments(profileId, page, size, pageable);
+        Page<CommentResponse> responses = profileService.getComments(userId, page, size, pageable);
 
         return Response.success(responses);
     }

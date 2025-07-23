@@ -45,9 +45,11 @@ public class Order extends BaseEntity {
     }
 
     @Builder
-    public Order(User user, int totalPrice) {
+    public Order(User user, String tid, int totalPrice, OrderStatus status) {
         this.user = user;
+        this.tid = tid;
         this.totalPrice = totalPrice;
+        this.status = status;
     }
 
     // 주문 아이템들 추가 메서드

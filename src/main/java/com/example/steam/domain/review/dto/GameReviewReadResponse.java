@@ -11,6 +11,7 @@ public class GameReviewReadResponse {
     private final Long reviewId;
     private final String username;
     private final String nickname;
+    private final String profileImageUrl;
     private final boolean recommend;
     private final Integer reviewlikeCount;
     private final String content;
@@ -18,10 +19,11 @@ public class GameReviewReadResponse {
     private final String updatedAt;
 
     @QueryProjection
-    public GameReviewReadResponse(Long reviewId, String username, String nickname, boolean recommend, Integer reviewlikeCount, String content, String createdAt, String updatedAt) {
+    public GameReviewReadResponse(Long reviewId, String username, String nickname, String profileImageUrl, boolean recommend, Integer reviewlikeCount, String content, String createdAt, String updatedAt) {
         this.reviewId = reviewId;
         this.username = username;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
         this.recommend = recommend;
         this.reviewlikeCount = reviewlikeCount;
         this.content = content;

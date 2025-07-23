@@ -100,8 +100,8 @@ public class ProfileService {
         res : content, writerId, writerName, createdTime, updatedTime
      */
     @Transactional
-    public CommentResponse postComment(User writer, Long profileId, CommentPostRequest request) {
-        Profile profile = profileRepository.findById(profileId)
+    public CommentResponse postComment(User writer, Long userId, CommentPostRequest request) {
+        Profile profile = profileRepository.findProfileByUser_Id(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_PROFILE));
 
         Comment comment = Comment.builder()
@@ -120,9 +120,9 @@ public class ProfileService {
 
     // 프로필 내 댓글 삭제
     @Transactional
-    public void deleteComment(User user, Long profileId, Long commentId) {
+    public void deleteComment(User user, Long userId, Long commentId) {
         // 코멘트 작성자 혹은 프로필 유저만 삭제 가능함, 검증
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findProfileByUser_Id(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_PROFILE));
 
         Comment comment = commentRepository.findById(commentId)
@@ -138,8 +138,8 @@ public class ProfileService {
 
     }
 
-    public Page<CommentResponse> getComments(Long profileId, int page, int size, Pageable pageable) {
-        Page<CommentResponse> result = commentRepository.findCommentsWithPaging(page,size,pageable, profileId);
+    public Page<CommentResponse> getComments(Long userId, int page, int size, Pageable pageable) {
+        Page<CommentResponse> result = commentRepository.findCommentsWithPaging(page,size,pageable, userId);
 
         if (result.isEmpty()) {
             throw new SteamException(ErrorCode.NOT_FOUND_COMMENT);

@@ -26,7 +26,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom{
 
 
     @Override
-    public Page<CommentResponse> findCommentsWithPaging(int page, int size, Pageable pageable, Long profileId) {
+    public Page<CommentResponse> findCommentsWithPaging(int page, int size, Pageable pageable, Long userId) {
         List<CommentResponse> lists = queryFactory
                 .select(new QCommentResponse(
                         comment.id,
@@ -40,7 +40,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom{
                 .from(comment)
 //                .leftJoin(comment.profile, profile)
                 .leftJoin(comment.writer, user)
-                .where(comment.profile.id.eq(profileId))
+                .where(comment.profile.id.eq(userId))
                 .orderBy(comment.createdAt.desc())
                 .offset(page)
                 .limit(size)
@@ -49,7 +49,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom{
         long total = Optional.ofNullable(queryFactory
                 .select(comment.count())
                 .from(comment)
-                .where(comment.profile.id.eq(profileId))
+                .where(comment.profile.id.eq(userId))
                 .fetchOne())
                 .orElse(0L);
 

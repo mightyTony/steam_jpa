@@ -73,7 +73,7 @@ public class GameReviewController {
     @DeleteMapping("/review/{reviewId}")
     public Response<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewService.deleteReview(reviewId);
-
+        log.info("[리뷰 / 삭제] 리뷰 id - {}", reviewId);
         return Response.success("삭제 되었습니다");
     }
 
