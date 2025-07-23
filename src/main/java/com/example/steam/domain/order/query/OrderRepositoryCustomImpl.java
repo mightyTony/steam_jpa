@@ -1,7 +1,6 @@
 package com.example.steam.domain.order.query;
 
 import com.example.steam.domain.game.QGame;
-import com.example.steam.domain.order.Order;
 import com.example.steam.domain.order.QOrder;
 import com.example.steam.domain.order.QOrderItem;
 import com.example.steam.domain.order.dto.OrderHistoryResponse;

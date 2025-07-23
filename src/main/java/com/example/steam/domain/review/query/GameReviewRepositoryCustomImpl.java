@@ -11,17 +11,11 @@ import com.example.steam.domain.review.entity.QGameReviewLike;
 import com.example.steam.domain.user.QUser;
 import com.example.steam.domain.user.User;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.objenesis.SpringObjenesis;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

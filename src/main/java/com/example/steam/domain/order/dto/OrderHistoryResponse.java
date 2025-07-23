@@ -1,13 +1,8 @@
 package com.example.steam.domain.order.dto;
 
-import com.example.steam.domain.order.Order;
-import com.example.steam.domain.order.OrderItem;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder

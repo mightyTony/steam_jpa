@@ -2,7 +2,6 @@ package com.example.steam.domain.game.dto;
 
 import com.example.steam.domain.game.Game;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
