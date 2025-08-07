@@ -123,17 +123,12 @@ public class JwtTokenProvider {
     }
 
     public Long getUserId(String token) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-            return claims.get("userId", Long.class);
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error("토큰에서 userId 추출 실패", e);
-            throw new SteamException(ErrorCode.JWT_ILLEGAL_ARGUMENT);
-        }
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class);
     }
 
 

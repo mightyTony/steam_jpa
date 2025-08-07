@@ -23,7 +23,7 @@ public class LoginUserAspect {
 //        log.info("[LOGIN AOP]");
 //        log.info("[login aop] user : {}", user.toString());
         if(user == null || user.getId() == null) {
-            throw new SteamException(ErrorCode.JWT_ILLEGAL_ARGUMENT);
+//            throw new SteamException(ErrorCode.JWT_ILLEGAL_ARGUMENT);
         }
 
     }
