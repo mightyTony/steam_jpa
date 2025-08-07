@@ -51,8 +51,8 @@ public class NotificationController {
     @Operation(summary = "알림 서비스 구독")
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     @LoginUser
-    public SseEmitter subscribe(@AuthenticationPrincipal User user) {
-        return sseService.connect(user.getId());
+    public SseEmitter subscribe(@RequestParam("token") String token) {
+        return sseService.connect(token);
     }
 
     // 알림 읽음 처리

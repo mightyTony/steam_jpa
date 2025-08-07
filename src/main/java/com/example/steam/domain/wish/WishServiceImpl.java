@@ -69,9 +69,9 @@ public class WishServiceImpl implements WishService {
     public List<WishDto> getWishList(Long userId) {
         List<WishDto> wishes = wishRepository.findAllByUser_Id(userId);
 
-        if(wishes.isEmpty()){
-            throw new SteamException(ErrorCode.NOT_FOUND_WISH);
-        }
+//        if(wishes.isEmpty()){
+//            throw new SteamException(ErrorCode.NOT_FOUND_WISH);
+//        }
 
         return wishes;
     }

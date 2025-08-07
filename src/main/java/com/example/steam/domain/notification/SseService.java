@@ -1,5 +1,6 @@
 package com.example.steam.domain.notification;
 
+import com.example.steam.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SseService {
 
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
-
-    public SseEmitter connect(Long userId) {
+    private final JwtTokenProvider jwtTokenProvider;
+    public SseEmitter connect(String token) {
 //        if (emitters.containsKey(userId)) {
 //            emitters.remove(userId).complete();
 //        }
+        Long userId = jwtTokenProvider.getUserId(token);
 
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 
