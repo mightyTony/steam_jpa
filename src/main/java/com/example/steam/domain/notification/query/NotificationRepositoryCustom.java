@@ -13,4 +13,6 @@ public interface NotificationRepositoryCustom {
     List<NotificationDto> latestNotificationsTop10(User user);
 
     Optional<Notification> findByIdAndUser(Long noticeId, User user);
+
+    Optional<List<Notification>> findAllByUser(User user, Long userId);
 }

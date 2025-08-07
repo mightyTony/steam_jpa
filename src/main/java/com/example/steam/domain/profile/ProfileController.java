@@ -37,11 +37,29 @@ public class ProfileController {
        - 조건 : 프로필 조회 권한(친구,all) // 보류
      */
     @Operation(summary = "프로필 조회", description = "사용자 ID로 프로필 정보를 조회합니다.")
-    @GetMapping("/user")
+    @LoginUser
+    @GetMapping("/user/{userId}")
     public Response<ProfileResponse> getProfileInfo(
+            @AuthenticationPrincipal User user,
             @Parameter(description = "조회할 유저 ID", example = "1")
-            @RequestParam("id") Long userId) {
-        ProfileResponse response = profileService.getProfileInfo(userId);
+            @PathVariable("userId") Long userId) {
+        ProfileResponse response = profileService.getProfileInfo(user, userId);
+
+        return Response.success(response);
+    }
+
+    /*
+        # 프로필 검색
+        - 응답 : 프로필 유저 정보
+        - 조건 : 없음
+     */
+    @Operation(summary = "프로필 검색", description = "사용자 검색 ")
+    @GetMapping("")
+    public Response<List<ProfileResponse>> searchProfileInfo(
+            @Parameter(description = "조회할 유저 아이디 혹은 닉네임")
+            @RequestParam("search") String search) {
+
+        List<ProfileResponse> response = profileService.searchProfileInfo(search);
 
         return Response.success(response);
     }
@@ -133,5 +151,6 @@ public class ProfileController {
 
         return Response.success(result);
     }
+
 
 }

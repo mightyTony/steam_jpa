@@ -19,8 +19,8 @@ public class GameDetailResponse {
     private String content;
     private int price;
     private String pictureUrl;
-    private int sales;  // 판매량
-    private Integer discount; // 할인률 %
+    private int sales;
+    private Integer discount;
     private int totalPrice;
     private boolean onSale;
     private String releaseDate;

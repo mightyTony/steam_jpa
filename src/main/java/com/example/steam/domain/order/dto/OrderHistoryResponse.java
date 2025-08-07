@@ -9,6 +9,7 @@ import lombok.Data;
 public class OrderHistoryResponse {
     private Long gameId;
     private String gameName;
+    private String gameImageUrl;
     private Long orderId;
     private int totalPrice;
     private String status;
@@ -30,9 +31,10 @@ public class OrderHistoryResponse {
 //                .build();
 //    }
     @QueryProjection
-    public OrderHistoryResponse(Long gameId, String gameName, Long orderId, int totalPrice, String status, String createdAt) {
+    public OrderHistoryResponse(Long gameId, String gameName, String gameImageUrl, Long orderId, int totalPrice, String status, String createdAt) {
         this.gameId = gameId;
         this.gameName = gameName;
+        this.gameImageUrl = gameImageUrl;
         this.orderId = orderId;
         this.totalPrice = totalPrice;
         this.status = status;

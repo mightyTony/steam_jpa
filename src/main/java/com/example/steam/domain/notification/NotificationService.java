@@ -20,5 +20,7 @@ public interface NotificationService {
 
     void updateReadStatus(Long noticeId, User user);
 
+    void updateReadStatusAll(User user, Long userId);
+
 //    void updateReadStatusAll(User user);
 }

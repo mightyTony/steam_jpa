@@ -61,7 +61,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     // aws
     implementation 'software.amazon.awssdk:s3:2.21.5'
-    implementation 'software.amazon.awssdk:url-connection-client'
+//    implementation 'software.amazon.awssdk:url-connection-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     // batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'

@@ -1,12 +1,15 @@
 package com.example.steam.domain.cart.dto;
 
 import com.example.steam.domain.cart.Cart;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Schema(description = "장바구니 항목 응답 DTO")
 public class CartViewResponse {
     @Schema(description = "장바구니 항목 ID", example = "1001")

@@ -1,6 +1,7 @@
 package com.example.steam.domain.order.query;
 
 import com.example.steam.domain.game.QGame;
+import com.example.steam.domain.order.OrderStatus;
 import com.example.steam.domain.order.QOrder;
 import com.example.steam.domain.order.QOrderItem;
 import com.example.steam.domain.order.dto.OrderHistoryResponse;
@@ -34,6 +35,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
                 .select(new QOrderHistoryResponse(
                         game.id,
                         game.name,
+                        game.pictureUrl,
                         order.id,
                         order.totalPrice,
                         order.status.stringValue(),
@@ -42,7 +44,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
                 .from(order)
                 .leftJoin(order.orderItems, orderItem)
                 .leftJoin(orderItem.game, game)
-                .where(order.user.eq(user))
+                .where(order.user.eq(user).and(order.status.eq(OrderStatus.COMPLETED)))
                 .orderBy(order.createdAt.desc())
                 .fetch();
     }

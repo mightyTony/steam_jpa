@@ -1,6 +1,7 @@
 package com.example.steam.domain.profile.dto;
 
 import com.example.steam.domain.profile.Profile;
+import com.example.steam.domain.profile.friendship.FriendStatus;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.querydsl.core.annotations.QueryProjection;
@@ -24,12 +25,25 @@ public class ProfileResponse {
     @Schema(description = "프로필 이미지 URL", example = "https://cdn.example.com/images/profile.jpg")
     private String profileImageUrl;
 
+    @Schema(description = "관계 상태", example = "ACCEPTED")
+    private FriendStatus friendStatus;
+
+    @QueryProjection
+    public ProfileResponse(Long userId, String content, String nickname, String profileImageUrl, FriendStatus status) {
+        this.userId = userId;
+        this.content = content;
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+        this.friendStatus = status;
+    }
+
     @QueryProjection
     public ProfileResponse(Long userId, String content, String nickname, String profileImageUrl) {
         this.userId = userId;
         this.content = content;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
+        this.friendStatus = null;
     }
 
     public static ProfileResponse update(Profile profile) {

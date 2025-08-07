@@ -64,7 +64,9 @@ public class FriendshipController {
     public Response<FriendshipResponse> updateFriendshipRequestStatus(@PathVariable("requestId") Long requestId,
                                                                       @Parameter(description = "친구 수락/거절 (ACCEPTED, REJECTED)", example = "ACCEPTED")
                                                                       @RequestBody FriendshipRequestUpdateDto requestDto) {
+        log.info("[info] 친구 요청 수락/거절 요청 - request_id: {}", requestId);
         FriendshipResponse response = friendService.updateFriendshipRequestStatus(requestId, requestDto);
+        log.info("[info] 친구 요청 수락/거절 요청 - request_dto: {}", requestDto);
 
         return Response.success(response);
     }
@@ -90,6 +92,7 @@ public class FriendshipController {
     @DeleteMapping("/request/{requestId}")
     public Response<Void> deleteMyFriendshipRequest(@AuthenticationPrincipal User user,
                                                     @PathVariable("requestId") Long requestId) {
+        log.info("[info] 친구 요청 취소 - user : {}, reqId : {}", user.getNickname(), requestId);
         friendService.deleteMyFriendshipRequest(user, requestId);
         return Response.success();
     }
@@ -100,10 +103,9 @@ public class FriendshipController {
         - 응답 : 유저 id, 아이디, 닉네임, 프로필 사진
      */
     @Operation(summary = "내 친구 목록 조회", description = "내 친구 목록 전체를 조회합니다.")
-    @LoginUser
-    @GetMapping("/friends")
-    public Response<List<FriendshipReadResponse>> getMyFriends(@AuthenticationPrincipal User user) {
-        List<FriendshipReadResponse> responses = friendService.getMyFriends(user);
+    @GetMapping("/{userId}/friends")
+    public Response<List<FriendshipReadResponse>> getMyFriends(@PathVariable("userId") Long userId) {
+        List<FriendshipReadResponse> responses = friendService.getMyFriends(userId);
         return Response.success(responses);
     }
 
@@ -113,10 +115,9 @@ public class FriendshipController {
         - 응답 : 친구 리스트(6명), 총 친구 수(count)
      */
     @Operation(summary = "프로필용 친구 일부 조회", description = "프로필 화면에서 사용하는 요약된 친구 목록을 조회합니다.")
-    @LoginUser
-    @GetMapping("/friends-short")
-    public Response<FriendshipShortViewResponse> getMyFriendsList(@AuthenticationPrincipal User user) {
-        FriendshipShortViewResponse response = friendService.getMyFriendsList(user);
+    @GetMapping("/{userId}/friends-short/")
+    public Response<FriendshipShortViewResponse> getMyFriendsList(@PathVariable("userId") Long userId) {
+        FriendshipShortViewResponse response = friendService.getMyFriendsList(userId);
         return Response.success(response);
     }
 
@@ -125,9 +126,10 @@ public class FriendshipController {
     */
     @Operation(summary = "친구 삭제", description = "친구 삭제 합니다.")
     @LoginUser
-    @DeleteMapping("/friendship/{friendshipId}")
+    @DeleteMapping("/{friendshipId}")
     public Response<Void> deleteMyFriendship(@AuthenticationPrincipal User user,
                                              @PathVariable("friendshipId") Long friendshipId) {
+        log.info("[info] 친구 삭제 요청 - user : {}, friendId : {}", user.getNickname(), friendshipId);
         friendService.deleteMyFriendship(user, friendshipId);
 
         return Response.success();

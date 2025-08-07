@@ -13,12 +13,14 @@ public class FriendshipReadResponse {
     private final String username;
     private final String nickname;
     private final String profileImageUrl;
+    private final Long friendshipId;
 
     @QueryProjection
-    public FriendshipReadResponse(Long userId, String username, String nickname, String profileImageUrl) {
+    public FriendshipReadResponse(Long userId, String username, String nickname, String profileImageUrl, Long friendshipId) {
         this.userId = userId;
         this.username = username;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
+        this.friendshipId = friendshipId;
     }
 }

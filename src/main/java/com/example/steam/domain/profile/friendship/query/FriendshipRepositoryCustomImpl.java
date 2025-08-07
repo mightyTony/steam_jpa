@@ -40,7 +40,7 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
     }
 
     @Override
-    public Optional<List<FriendshipReadResponse>> findFriendships(User user) {
+    public Optional<List<FriendshipReadResponse>> findFriendships(Long userId) {
         QUser sender = new QUser("sender");
         QUser receiver = new QUser("receiver");
 
@@ -50,11 +50,12 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
                         receiver.id,
                         receiver.username,
                         receiver.nickname,
-                        receiver.profileImageUrl
+                        receiver.profileImageUrl,
+                        friendship.id
                 ))
                 .from(friendship)
                 .leftJoin(friendship.receiver, receiver)
-                .where(friendship.sender.id.eq(user.getId())
+                .where(friendship.sender.id.eq(userId)
                         .and(friendship.receiver.deleted.eq(false))
                         .and(friendship.status.eq(FriendStatus.ACCEPTED))
                 )
@@ -66,11 +67,12 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
                         sender.id,
                         sender.username,
                         sender.nickname,
-                        sender.profileImageUrl
+                        sender.profileImageUrl,
+                        friendship.id
                 ))
                 .from(friendship)
                 .leftJoin(friendship.sender, sender)
-                .where(friendship.receiver.id.eq(user.getId())
+                .where(friendship.receiver.id.eq(userId)
                         .and(friendship.sender.deleted.eq(false))
                         .and(friendship.status.eq(FriendStatus.ACCEPTED))
                 )
@@ -98,7 +100,8 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
                         friendship.sender.id,
                         friendship.receiver.id,
                         friendship.receiver.nickname,
-                        friendship.status
+                        friendship.status,
+                        friendship.receiver.profileImageUrl
                 ))
                 .from(friendship)
                 .where(
@@ -109,45 +112,48 @@ public class FriendshipRepositoryCustomImpl implements FriendshipRepositoryCusto
     }
 
     @Override
-    public FriendshipShortViewResponse getMyFriendsListShort(User user) {
+    public FriendshipShortViewResponse getMyFriendsListShort(Long userId) {
+        QFriendship friendship = QFriendship.friendship;
+
         Long total = queryFactory
                 .select(friendship.count())
                 .from(friendship)
-                .where((friendship.sender.id.eq(user.getId())
-                        .or(friendship.receiver.id.eq(user.getId())))
-                        .and(friendship.status.eq(FriendStatus.ACCEPTED))
+                .where(
+                        (friendship.sender.id.eq(userId).or(friendship.receiver.id.eq(userId)))
+                                .and(friendship.status.eq(FriendStatus.ACCEPTED))
+                                .and(friendship.sender.id.ne(friendship.receiver.id))
                 )
                 .fetchFirst();
 
-        // 2. 친구 리스트 조회 (최대 6명, 내가 sender이거나 receiver인 경우 합)
         List<FriendshipReadResponse> friends = queryFactory
                 .select(new QFriendshipReadResponse(
                         new CaseBuilder()
-                                .when(friendship.sender.eq(user))
+                                .when(friendship.sender.id.eq(userId))
                                 .then(friendship.receiver.id)
                                 .otherwise(friendship.sender.id),
                         new CaseBuilder()
-                                .when(friendship.sender.eq(user))
+                                .when(friendship.sender.id.eq(userId))
                                 .then(friendship.receiver.username)
                                 .otherwise(friendship.sender.username),
                         new CaseBuilder()
-                                .when(friendship.sender.eq(user))
+                                .when(friendship.sender.id.eq(userId))
                                 .then(friendship.receiver.nickname)
                                 .otherwise(friendship.sender.nickname),
                         new CaseBuilder()
-                                .when(friendship.sender.eq(user))
+                                .when(friendship.sender.id.eq(userId))
                                 .then(friendship.receiver.profileImageUrl)
-                                .otherwise(friendship.sender.profileImageUrl)
+                                .otherwise(friendship.sender.profileImageUrl),
+                        friendship.id
                 ))
                 .from(friendship)
                 .where(
-                        (friendship.sender.eq(user).or(friendship.receiver.eq(user)))
+                        (friendship.sender.id.eq(userId).or(friendship.receiver.id.eq(userId)))
                                 .and(friendship.status.eq(FriendStatus.ACCEPTED))
+                                .and(friendship.sender.id.ne(friendship.receiver.id))
                 )
                 .limit(6)
                 .fetch();
 
-        return new FriendshipShortViewResponse(total,friends);
+        return new FriendshipShortViewResponse(total, friends);
     }
-
 }

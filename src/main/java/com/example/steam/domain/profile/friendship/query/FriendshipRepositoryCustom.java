@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface FriendshipRepositoryCustom {
     boolean isFriend(Long myId, Long receiverId);
 
-    Optional<List<FriendshipReadResponse>> findFriendships(User user);
+    Optional<List<FriendshipReadResponse>> findFriendships(Long userId);
 
     List<FriendshipSearchResponse> getMyFriendshipRequest(User user);
 
-    FriendshipShortViewResponse getMyFriendsListShort(User user);
+    FriendshipShortViewResponse getMyFriendsListShort(Long userId);
 }

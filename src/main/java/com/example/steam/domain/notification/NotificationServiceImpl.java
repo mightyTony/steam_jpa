@@ -108,7 +108,18 @@ public class NotificationServiceImpl implements NotificationService {
 
         notification.markRead();
 
-        notificationRepository.save(notification);
+        // notificationRepository.save(notification);
+    }
+
+    @Override
+    @Transactional
+    public void updateReadStatusAll(User user, Long userId) {
+        if(!user.getId().equals(userId)) {
+          throw new SteamException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        List<Notification> notifications = notificationRepository.findAllByUser(user, userId)
+                .orElseThrow(()-> new SteamException(ErrorCode.NOT_FOUND_NOTIFICATION));
     }
 
 //    @Override

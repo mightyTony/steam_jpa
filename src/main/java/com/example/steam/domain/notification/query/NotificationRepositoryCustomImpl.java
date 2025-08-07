@@ -41,9 +41,11 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                         notification.createdAt
                 ))
                 .from(notification)
-                .where( notification.userId.eq(user.getId()),
-                        notification.isRead.isFalse()
+                .where(notification.userId.eq(user.getId())
+                        //notification.isRead.isFalse()
                 )
+                .orderBy(notification.createdAt.desc())
+                .limit(10)
                 .fetch();
     }
 
@@ -56,5 +58,13 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                         .and(notification.userId.eq(user.getId()))
                 )
                 .fetchOne());
+    }
+
+    @Override
+    public Optional<List<Notification>> findAllByUser(User user, Long userId) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(notification)
+                .where(notification.userId.eq(userId))
+                .fetch());
     }
 }

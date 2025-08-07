@@ -66,14 +66,15 @@ public class NotificationController {
     }
 
     // 알림 모두 읽음 처리
-//    @Operation(summary = "모든 알림 읽음 처리")
-//    @PutMapping
-//    @LoginUser
-//    public Response<Void> updateAllNotification(@AuthenticationPrincipal User user) {
-//        notificationService.updateReadStatusAll(user);
-//
-//        return Response.success();
-//    }
+    @Operation(summary = "모든 알림 읽음 처리")
+    @PutMapping("/{id}/read-all")
+    @LoginUser
+    public Response<Void> updateAllNotification(@AuthenticationPrincipal User user,
+                                                @PathVariable("id") Long userId) {
+        notificationService.updateReadStatusAll(user, userId);
+
+        return Response.success();
+    }
 
     // 알림 삭제 처리
 }

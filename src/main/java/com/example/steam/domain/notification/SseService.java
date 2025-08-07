@@ -17,6 +17,10 @@ public class SseService {
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     public SseEmitter connect(Long userId) {
+//        if (emitters.containsKey(userId)) {
+//            emitters.remove(userId).complete();
+//        }
+
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 
         emitters.put(userId, emitter);
@@ -51,6 +55,7 @@ public class SseService {
         }
     }
 
+    // 할인 알림 용
     public void sendNotifications(List<Notification> notifications) {
         log.info("[LOG] 알림 전송 - 전체 대상 {} ", notifications.size());
         for (Notification notification : notifications) {

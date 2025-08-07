@@ -111,10 +111,10 @@ public class FriendshipService {
     - 응답 : 유저 id, 아이디, 닉네임, 프로필 사진
     */
     @Transactional(readOnly = true)
-    public List<FriendshipReadResponse> getMyFriends(User user) {
+    public List<FriendshipReadResponse> getMyFriends(Long userId) {
 //        userService.isExisted(user);
 
-        return friendRepository.findFriendships(user)
+        return friendRepository.findFriendships(userId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_MY_FRIENDSHIP));
     }
 
@@ -149,8 +149,8 @@ public class FriendshipService {
     }
 
     @Transactional(readOnly = true)
-    public FriendshipShortViewResponse getMyFriendsList(User user) {
-        return friendRepository.getMyFriendsListShort(user);
+    public FriendshipShortViewResponse getMyFriendsList(Long userId) {
+        return friendRepository.getMyFriendsListShort(userId);
     }
 
 
@@ -159,7 +159,12 @@ public class FriendshipService {
         Friendship friendship = friendRepository.findById(friendshipId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_FRIENDSHIP));
 
-        if(!user.getUsername().equals(friendship.getSender().getUsername()) || !user.getUsername().equals(friendship.getReceiver().getUsername())) {
+        log.info("sender : {} , receiver : {}", friendship.getSender().getUsername(), friendship.getReceiver().getUsername());
+
+        Boolean senderCheck = user.getUsername().equals(friendship.getSender().getUsername());
+        Boolean receiverCheck = user.getUsername().equals(friendship.getReceiver().getUsername());
+
+        if(!(senderCheck || receiverCheck)) {
             throw new SteamException(ErrorCode.UNAUTHORIZED);
         }
 

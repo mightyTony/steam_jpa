@@ -39,11 +39,11 @@ public class ProfileService {
     private final String S3_USER_DIRNAME = "image/user";
 
     @Transactional(readOnly = true)
-    public ProfileResponse getProfileInfo(Long userId) {
+    public ProfileResponse getProfileInfo(User user , Long userId) {
         // 유저 검증
         userService.isExistedBoolean(userId);
         // 프로필 정보
-        return profileRepository.findByUserId(userId);
+        return profileRepository.findByUserId(user, userId);
     }
 
     @Transactional
@@ -156,4 +156,13 @@ public class ProfileService {
 
         return result;
     }
+
+    @Transactional(readOnly = true)
+    public List<ProfileResponse> searchProfileInfo(String search) {
+
+        List<ProfileResponse> result = profileRepository.findBySearch(search);
+
+        return result;
+    }
+
 }

@@ -29,6 +29,7 @@ public class CartController {
     public Response<Void> addToCart(@AuthenticationPrincipal User user,
                                     @RequestParam("game") Long gameId) {
         cartService.addToCart(gameId, user);
+        log.info("[info] 장바구니 추가 - 유저 : {}, 게임 아이디 : {}", user.getUsername(), gameId);
         return Response.success();
     }
 
@@ -47,6 +48,7 @@ public class CartController {
     @DeleteMapping("/{game}")
     public Response<Void> deleteCartItem(@PathVariable("game") Long gameId, @AuthenticationPrincipal User user) {
         cartService.deleteItemFromCart(user, gameId);
+        log.info("[info] 장바구니 삭제 - 유저 : {}, 게임 아이디 : {}", user.getUsername(), gameId);
         return Response.success();
     }
 }

@@ -54,7 +54,7 @@ public class Game extends BaseEntity {
     private List<GameGenre> genres = new ArrayList<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<GameReview> reviews;
+    private List<GameReview> reviews = new ArrayList<>();
 
     @Builder
     public Game(String name, String developer, String publisher, String content,
