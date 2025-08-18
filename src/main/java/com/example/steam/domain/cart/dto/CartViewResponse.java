@@ -21,6 +21,12 @@ public class CartViewResponse {
     @Schema(description = "게임 이름", example = "StarCraft")
     private final String name;
 
+    @Schema(description = "개발사", example = "블리자드")
+    private final String developer;
+
+    @Schema(description = "게임 이미지", example = "example.jpg")
+    private final String pictureUrl;
+
     @Schema(description = "정가", example = "19900")
     private final int price;
 
@@ -34,6 +40,8 @@ public class CartViewResponse {
         this.id = cart.getId();
         this.gameId = cart.getGame().getId();
         this.name = cart.getGame().getName();
+        this.developer = cart.getGame().getDeveloper();
+        this.pictureUrl = cart.getGame().getPictureUrl();
         this.price = cart.getGame().getPrice();
         this.discount = cart.getGame().getDiscount();
         this.totalPrice = cart.getGame().getTotalPrice();

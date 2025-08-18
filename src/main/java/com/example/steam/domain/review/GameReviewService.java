@@ -122,38 +122,34 @@ public class GameReviewService {
 
 
     @Transactional
-    public GameReviewLikeResponse toggleReviewLike(User user, Long gameId, Long reviewId, boolean toggleLike) {
-        // 1. 게임 검증
-        Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME));
-        // 2. 리뷰 검증
-        GameReview gameReview = gameReviewRepository.findById(reviewId)
+    public GameReviewLikeResponse toggleReviewLike(User user, Long gameId, Long reviewId) {
+        // 1. 리뷰 검증
+        GameReview review = gameReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new SteamException(ErrorCode.NOT_FOUND_GAME_REVIEW));
-        // 3. 토글 검증 (이미 유저가 좋아요를 했다면 좋아요를 취소 시켜준다.)
-        Optional<GameReviewLike> reviewLike = likeRepository.findByUserAndGameReview(user, gameReview);
+        // 2. 토글 검증 (이미 유저가 좋아요를 했다면 좋아요를 취소 시켜준다.)
+        Optional<GameReviewLike> existing = likeRepository.findByUserAndGameReview(user, review);
 
-        // 이미 좋아요를 눌렀다면 좋아요 취소, 좋아요 감소 / 안 눌렀다면 좋아요, 좋아요 증가
-        boolean isLike = false;
-
-        if (toggleLike) { // 좋아요 추가
-            if (reviewLike.isEmpty()) {
-                GameReviewLike newLike = GameReviewLike.builder()
-                        .user(user)
-                        .gameReview(gameReview)
-                        .build();
-                likeRepository.save(newLike);
-                isLike = true;
-            }
-        } else { // 좋아요 취소
-            reviewLike.ifPresent(likeRepository::delete);
+        boolean isLiked;
+        if (existing.isPresent()) {
+            // 이미 좋아요 했으면 취소
+            likeRepository.delete(existing.get());
+            isLiked = false;
+        } else {
+            // 없으면 추가
+            GameReviewLike newLike = GameReviewLike.builder()
+                    .user(user)
+                    .gameReview(review)
+                    .build();
+            likeRepository.save(newLike);
+            isLiked = true;
         }
 
         // 좋아요 개수 조회
-        Long likeCount = likeRepository.countByGameReview(gameReview);
+        Long likeCount = likeRepository.countByGameReview(review);
 
         return GameReviewLikeResponse.builder()
-                .reviewId(gameReview.getId())
-                .isLiked(isLike)
+                .reviewId(review.getId())
+                .isLiked(isLiked)
                 .likeCount(likeCount)
                 .build();
     }

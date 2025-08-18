@@ -23,6 +23,8 @@ public class GameDetailResponse {
     private Integer discount;
     private int totalPrice;
     private boolean onSale;
+    private Integer like_count;
+    private Integer dislike_count;
     private String releaseDate;
     private List<String> genres;
 
@@ -39,6 +41,8 @@ public class GameDetailResponse {
         this.discount = game.getDiscount();
         this.totalPrice = game.getTotalPrice();
         this.onSale = game.isOnSale();
+        this.like_count = game.getLikeCount();
+        this.dislike_count = game.getDislikeCount();
         this.releaseDate = game.getReleaseDate();
         this.genres = game.getGenres().stream()
                 .map(genre -> genre.getGenreName())

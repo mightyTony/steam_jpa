@@ -11,6 +11,7 @@ import com.example.steam.domain.review.entity.QGameReviewLike;
 import com.example.steam.domain.user.QUser;
 import com.example.steam.domain.user.User;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -76,7 +77,9 @@ public class GameReviewRepositoryCustomImpl implements GameReviewRepositoryCusto
                         user.nickname,
                         user.profileImageUrl,
                         review.recommend,
-                        reviewLike.id.count().intValue(),
+                        JPAExpressions.select(reviewLike.count().intValue())
+                                .from(reviewLike)
+                                .where(reviewLike.gameReview.eq(review)),
                         review.content,
                         review.createdAt.stringValue(),
                         review.lastModifiedAt.stringValue()

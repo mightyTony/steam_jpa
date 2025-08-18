@@ -108,10 +108,9 @@ public class GameReviewController {
     @PostMapping("/game/{gameId}/{reviewId}/like")
     public Response<GameReviewLikeResponse> toggleReviewLike(@AuthenticationPrincipal User user,
                                                              @PathVariable("gameId") Long gameId,
-                                                             @PathVariable("reviewId") Long reviewId,
-                                                             @Parameter(name = "toggle", description = "true = 좋아요/ false = 취소")
-                                                                 @RequestParam("toggle") boolean toggleLike) {
-        GameReviewLikeResponse response = reviewService.toggleReviewLike(user, gameId, reviewId, toggleLike);
+                                                             @PathVariable("reviewId") Long reviewId
+                                                            ) {
+        GameReviewLikeResponse response = reviewService.toggleReviewLike(user, gameId, reviewId);
 
         return Response.success(response);
     }
