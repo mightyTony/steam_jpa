@@ -89,8 +89,8 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .addServersItem(new Server()
                         .url("https://tonyworld.kr").description("prod server"))
-                .addServersItem(new Server()
-                        .url("https://tonyworld.site").description("prod server"))
+//                .addServersItem(new Server()
+//                        .url("https://tonyworld.site").description("prod server"))
                 .components(components);
     }
 }
